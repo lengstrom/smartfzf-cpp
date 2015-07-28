@@ -5,4 +5,9 @@ add_executable(
     smartfzf src/main.cc
              src/smartfzf.cc
              src/smartfzf.h
+             boost/filesystem/convenience.hpp
+             boost/filesystem/exception.hpp
+             boost/filesystem/fstream.hpp
+             boost/filesystem/operations.hpp
+             boost/filesystem/path.hpp
 )
