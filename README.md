@@ -4,7 +4,8 @@ smartfzf in cpp
 
 Instructions to build and run:
 
-Requires cmake and platform-specific cpp compilation tools
+Requires cmake, boost, and platform-specific 
+cpp compilation tools
 
  * Execute the following in a shell:
 
