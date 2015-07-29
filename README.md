@@ -22,4 +22,7 @@ cpp compilation tools
 
             ./smartfzf
 
+   + To run the tests, execute:
+            make test
+
 

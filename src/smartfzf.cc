@@ -17,11 +17,12 @@ Test::~Test()
  * string */
 bool Test::fz_match(const std::string &input, const std::string &against)
 {
+    if(input.empty()) // otherwise, undefined behavior on empty string
+        return false;
     for(std::string::const_iterator input_iter = input.begin(), 
             against_iter = against.begin(); 
             against_iter != against.end();
             against_iter++) {
-        // std::cout << "chars: " << *input_iter << " against " << *against_iter << '\n';
         if(tolower(*input_iter) == tolower(*against_iter)) {
             input_iter++;
             if( input_iter == input.end() )
@@ -31,4 +32,3 @@ bool Test::fz_match(const std::string &input, const std::string &against)
     return false;
 }
 
-// do stuff
