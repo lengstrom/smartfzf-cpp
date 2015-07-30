@@ -3,11 +3,11 @@
 
 #include <string>
 
-class Test {
+class Smartfzf {
 public:
-    Test(int);
-    ~Test();
-    bool fz_match(const std::string &, const std::string &);
+    Smartfzf(int);
+    ~Smartfzf();
+    static bool fz_match(const std::string &, const std::string &);
 }; // semicolon!
 
 #endif // SMARTFZF_INCLUDE_SMARTFZF_H_

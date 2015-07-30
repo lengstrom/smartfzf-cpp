@@ -1,26 +1,45 @@
 #include <iostream>
-#include <boost/filesystem.hpp>
+#include <vector>
+#include <string>
 #include "smartfzf.h"
 
-const char *bts(bool input)
+/* read the list of files from
+ * stdin, read the current buffer
+ * from argv, output to stdout
+ *
+ * what it does: matches the
+ * last token of the current
+ * buffer against the list
+ * of files, and prints
+ * the files that the token
+ * matches according to
+ * Smartfzf::fz_match()
+ *
+ * expecting list of files from
+ * ls, delimited with newlines
+ * */
+int main(int argc, char *argv[])
 {
-    return input?"true":"false";
-}
+    const int NUM_RESERVE = 7; // number of spaces to reserve in vect
 
-int main(int argc, char *argv[]) 
-{
-    // example class from smartfzf.h
-    Test foo(5);
-    std::cout << "Smartfzf file size: "<< boost::filesystem::file_size("smartfzf") << "\n\n";
-    std::cout << "Does aj match Abchasj? " << bts(foo.fz_match("aj","Abchasj")) << '\n';
-    std::cout << "Does aaj match Abchasj? " << bts(foo.fz_match("aaj","Abchasj")) << '\n';
-    std::cout << "Does sj match Abchasj? " << bts(foo.fz_match("sj","Abchasj")) << '\n';
-    std::cout << "Does abas match Abchasj? " << bts(foo.fz_match("abas","Abchasj")) << '\n';
-    std::cout << "Does abash match Abchasj? " << bts(foo.fz_match("abash","Abchasj")) << '\n';
-    std::cout << "Does chj match Abchasj? " << bts(foo.fz_match("chj","Abchasj")) << '\n';
-    std::cout << "Does na match Abchasj? " << bts(foo.fz_match("na","Abchasj")) << '\n';
+    const char *input = argv[argc-1];
+    std::vector<std::string> against_vect;
+    against_vect.reserve(7);
+
+    std::string temp_string;
+    while(std::getline(std::cin,temp_string))
+    {
+        against_vect.push_back(temp_string);
+    }
+
+    for(std::vector<std::string>::iterator it = against_vect.begin();
+            it != against_vect.end();
+            it++)
+    {
+        if(Smartfzf::fz_match(input,*it))
+            std::cout << *it << ' ';
+    }
+
     return 0;
-    // automatic class deconstructor called
-    // when Test goes out of scope
 }
 
