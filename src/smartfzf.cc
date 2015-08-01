@@ -25,6 +25,9 @@ bool fz_match(const string &input, const string &against) {
 
     return false;
 }
+/* Given an input string to match to and a vector of candidates (strings) to match to
+ * Returns vector of strings that matched using fuzzy_search 
+ */
 
 vector<string> match_from_candidates(const string &input, vector<string> &candidates) {
     vector<string> results;
