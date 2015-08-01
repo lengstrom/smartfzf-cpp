@@ -3,19 +3,10 @@
 #include <algorithm>
 #include <iostream>
 
-Test::Test(int h) 
-{
-}
-
-Test::~Test() 
-{
-}
-
-
 /* returns true if the first string
  * is a lazy subset of the second
  * string */
-bool Test::fz_match(const std::string &input, const std::string &against)
+bool fz_match(const std::string &input, const std::string &against)
 {
     for(std::string::const_iterator input_iter = input.begin(), 
             against_iter = against.begin(); 
