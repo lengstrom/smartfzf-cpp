@@ -64,3 +64,7 @@ CMakeFiles
 Makefile
 cmake_install.cmake
 CMakeCache.txt
+
+build/test
+build/Testing
+build/*.cmake
