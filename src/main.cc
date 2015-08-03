@@ -3,8 +3,7 @@
 #include "smartfzf.h"
 #include <ncurses.h>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     return 0;
 }
 
@@ -23,6 +22,5 @@ void start_ncurses() {
     noecho();
     intrflush(stdscr, false);
     keypad(stdscr, true);
-    atexit(endCurses);
-    curses_started = true;
+    atexit(end_ncurses);
 }
