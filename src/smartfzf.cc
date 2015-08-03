@@ -17,8 +17,7 @@ using std::vector;
 /* returns true if the first string
  * is an in-order subset of the second
  * string */
-bool fz_match(const string &input, const string &against) 
-{
+bool fz_match(const string &input, const string &against) {
     for (string::const_iterator input_iter = input.begin(), against_iter = against.begin(); 
          against_iter != against.end();
          against_iter++) {
@@ -28,6 +27,7 @@ bool fz_match(const string &input, const string &against)
                 return true;
         }
     }
+
     return false;
 }
 
@@ -44,6 +44,7 @@ vector<string> match_from_candidates(const string &input, vector<string> &candid
             results.push_back(curr);
         }
     }
+
     return results;
 }
 
@@ -52,6 +53,12 @@ bool prefix_match(const string &input, const string &against) {
          against_iter != against.end();
          against_iter++, input_iter++;
          ) {
-        
+        if (tolower(*input_iter) != tolower(*against_iter)) {
+            return false;
+        } else if (input_iter == input.end()) {
+            return true;
+        }
     }
+
+    return false;
 }
