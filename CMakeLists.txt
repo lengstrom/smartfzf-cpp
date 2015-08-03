@@ -8,7 +8,6 @@ find_package(Boost REQUIRED COMPONENTS system filesystem
     unit_test_framework)
 find_package(Curses REQUIRED)
 
-
 include_directories(include ${Boost_INCLUDE_DIRS})
 include_directories(include ${CURSES_INCLUDE_DIR})
 
