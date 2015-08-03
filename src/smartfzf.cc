@@ -2,11 +2,8 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
-<<<<<<< HEAD
 #include <map>
-=======
 #include "smartfzf.h"
->>>>>>> 752ad11d510fc65e93c1a60abe87671b4348f7a2
 
 using std::string;
 using std::map;
