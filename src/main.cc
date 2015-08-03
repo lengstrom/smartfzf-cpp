@@ -4,6 +4,7 @@
 #include <ncurses.h>
 
 int main(int argc, char *argv[]) {
+    std::cout << "smartfzf works!" << std::endl;
     return 0;
 }
 
