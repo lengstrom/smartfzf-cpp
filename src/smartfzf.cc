@@ -51,7 +51,7 @@ bool prefix_match(const string &input, const string &against) {
              against_iter = against.begin();
          against_iter != against.end();
          against_iter++,
-             input_iter++
+             inpsut_iter++
          ) {
         if (tolower(*input_iter) != tolower(*against_iter)) {
             return false;
