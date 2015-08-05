@@ -16,4 +16,5 @@ struct Renderer {
     void end_ncurses();
     void update_contents();
     void render_window();
+}
 #endif

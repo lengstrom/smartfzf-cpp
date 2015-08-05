@@ -1,6 +1,7 @@
 #include <string>
 #include <ncurses>
 #include <vector>
+#include <algorithm>
 
 void Renderer::render_window() {
     getmaxyx(stdscr, win_height, win_width);
@@ -14,20 +15,14 @@ void Renderer::render_window() {
 
 void Renderer::update_contents() {
     // do some sort of updating
-    int num_lines_to_write = win_height;
-    if (lines_to_write::size < win_height) {
-        
-    }
+    int num_lines_to_write = std::min(lines_to_write.size(), win_height);
 
-    for (int line = 0; line < win_height; line++) { // For every line in the window
+    for (int line = 0; line < num_lines_to_write; line++) { // For every line in the window
         std::string curr_line = lines_to_write[line];
-        int num_chars_to_write = curr_line.size();
-        if (num_chars_to_write > win_width) {
-            num_chars_to_write = win_width;
-        }
+        int num_chars_to_write = std::min(win_width, curr_line.size())
 
         for (int col = 0; col < num_chars_to_write; col++){
-            mvwaddch(win, line, col, curr_line[col]);
+            mvwaddch(win, win_height - line, col, curr_line[col]);
         }
     }
 }
