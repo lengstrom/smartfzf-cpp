@@ -22,3 +22,4 @@ bindkey '^[[2~' _run_smartfzf # on my debian this is insert
 bindkey '^[[1;5C' _run_smartfzf # on my debian this is ctrl+rightarrow
 bindkey '^[[5C' _run_smartfzf # this SHOULD be ctrl+rightarrow on macbooks
                               # but I haven't tested it
+bindkey '^j' _run_smartfzf
