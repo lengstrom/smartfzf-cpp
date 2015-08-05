@@ -2,8 +2,8 @@
 #define GUARD_renderer_h
 
 #include <string>
-#include <ncurses.h>
 #include <vector>
+#include <ncurses.h>
 
 struct Renderer {
     const std::vector<std::string> &lines_to_write;
@@ -16,7 +16,7 @@ struct Renderer {
     void end_ncurses();
     void update_contents();
     void render_window();
-    void rerender_window();
+    void rerender_window(int signo);
     ~Renderer();
 };
 
