@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     std::string input;
     while(true) {
         int ch = in.read_char();
-        if(ch == KEY_BACKSPACE) {
+        if(ch == KEY_BACKSPACE || ch == KEY_DC) {
             if(input.length() > 0)
             {
                 input = input.substr(0,input.length()-1);
