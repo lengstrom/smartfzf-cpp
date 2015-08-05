@@ -1,16 +1,21 @@
 #include <string>
-#include <ncurses>
+#include <ncurses.h>
 #include <vector>
 #include <algorithm>
+#include "renderer.h"
 
 void Renderer::render_window() {
     getmaxyx(stdscr, win_height, win_width);
     win_height = win_height - 2;
-    delete win;
     win = newwin(win_height, win_width, 0, 0);
 
     update_contents();
     wrefresh(win);
+}
+
+void Renderer::rerender_window() {
+    delete win;
+    render_window();
 }
 
 void Renderer::~Renderer() {

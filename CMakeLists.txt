@@ -14,6 +14,7 @@ include_directories(include ${CURSES_INCLUDE_DIR})
 add_executable(
     smartfzf src/main.cc
              src/smartfzf.cc
+             src/renderer.cc
 )
 
 target_link_libraries(smartfzf ${Boost_LIBRARIES})

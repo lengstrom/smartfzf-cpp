@@ -2,7 +2,7 @@
 #define GUARD_renderer_h
 
 #include <string>
-#include <ncurses>
+#include <ncurses.h>
 #include <vector>
 
 struct Renderer {
@@ -16,6 +16,8 @@ struct Renderer {
     void end_ncurses();
     void update_contents();
     void render_window();
+    void rerender_window();
     ~Renderer();
-}
+};
+
 #endif
