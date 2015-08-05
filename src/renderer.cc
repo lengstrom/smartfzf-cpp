@@ -13,6 +13,10 @@ void Renderer::render_window() {
     wrefresh(win);
 }
 
+void Renderer::~Renderer() {
+    end_ncurses();
+}
+
 void Renderer::update_contents() {
     // do some sort of updating
     int num_lines_to_write = std::min(lines_to_write.size(), win_height);
