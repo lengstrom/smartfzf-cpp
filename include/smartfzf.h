@@ -1,5 +1,5 @@
-#ifndef SMARTFZF_INCLUDE_SMARTFZF_H_ // include guard
-#define SMARTFZF_INCLUDE_SMARTFZF_H_
+#ifndef GUARD_smartfzf_h
+#define GUARD_smartfzf_h
 
 #include <string>
 #include <vector>
@@ -9,4 +9,4 @@ bool prefix_match(const std::string &input, const std::string &against);
 
 std::vector<std::string> match_from_candidates(const std::string &input, const std::vector<std::string> &candidates);
 
-#endif // SMARTFZF_INCLUDE_SMARTFZF_H_
+#endif
