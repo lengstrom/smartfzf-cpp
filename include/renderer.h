@@ -17,7 +17,10 @@ struct Renderer {
     void update_contents();
     void render_window();
     void rerender_window(int signo);
+    static void resize_handler(int signo);
     ~Renderer();
+private:
+    static Renderer *instance;
 };
 
 #endif

@@ -7,6 +7,8 @@
 
 using std::min;
 
+Renderer *Renderer::instance;
+
 void Renderer::render_window() {
     getmaxyx(stdscr, win_height, win_width);
     win_height = win_height - 2;
@@ -17,7 +19,7 @@ void Renderer::render_window() {
 }
 
 void Renderer::rerender_window(int signo) {
-    delete win;
+    delwin(win);
     render_window();
 }
 
@@ -55,6 +57,13 @@ void Renderer::start_ncurses() {
 }
 
 Renderer::Renderer(const std::vector<std::string> &lines_to_write) : lines_to_write(lines_to_write) {
-    std::signal(28, rerender_window); // SIGWINCH == 28
+    instance = this;
+    std::signal(28, Renderer::resize_handler); // SIGWINCH == 28
     start_ncurses();
 }
+
+void Renderer::resize_handler(int signo) 
+{
+    instance->rerender_window(signo);
+}
+
