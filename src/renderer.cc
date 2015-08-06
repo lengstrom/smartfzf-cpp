@@ -16,6 +16,7 @@ void Renderer::render_window() {
 
     update_contents();
     wrefresh(win);
+    redrawwin(win);
 }
 
 void Renderer::rerender_window(int signo) {
