@@ -13,11 +13,11 @@ void Renderer::render_window() {
     win = newwin(win_height, win_width, 0, 0);
 
     update_contents();
+    redrawwin(win);
     wrefresh(win);
 }
 
 void Renderer::rerender_window() {
-    delwin(win);
     render_window();
 }
 
