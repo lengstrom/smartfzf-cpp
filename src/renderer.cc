@@ -9,19 +9,27 @@ using std::min;
 
 Renderer *Renderer::instance;
 
+
 void Renderer::render_window() {
     getmaxyx(stdscr, win_height, win_width);
     win_height = win_height - 2;
     win = newwin(win_height, win_width, 0, 0);
 
     update_contents();
-    wrefresh(win);
     redrawwin(win);
+    wrefresh(win);
 }
 
 void Renderer::rerender_window(int signo) {
-    delwin(win);
-    render_window();
+    endwin();
+    getmaxyx(stdscr, win_height, win_width);
+    win_height = win_height - 2;
+    wresize(win, win_height, win_width);
+
+    werase(win);
+    update_contents();
+    wrefresh(win);
+    redrawwin(win);
 }
 
 Renderer::~Renderer() {
