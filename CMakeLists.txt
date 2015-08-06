@@ -35,4 +35,4 @@ foreach(test ${tests})
         --log_level=all
         )
 endforeach(test)
-
+set_property(TARGET smartfzf PROPERTY CXX_STANDARD 11)
