@@ -12,11 +12,13 @@ struct Renderer {
     int win_width;
 
     Renderer(const std::vector<std::string> &lines);
+    Renderer();
     void start_ncurses();
     void end_ncurses();
     void update_contents();
     void render_window();
-    void rerender_window(int signo);
+    void rerender_window();
+
     ~Renderer();
 };
 

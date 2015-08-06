@@ -36,3 +36,4 @@ foreach(test ${tests})
         )
 endforeach(test)
 
+set_property(TARGET smartfzf PROPERTY CXX_STANDARD 11)

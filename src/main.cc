@@ -1,10 +1,20 @@
 #include <iostream>
 #include <vector>
+#include <csignal>
 #include "smartfzf.h"
 #include "renderer.h"
 
 using std::vector;
 using std::string;
+
+static volatile sig_atomic_t resize_caught=0;
+
+extern "C" void handle_resize(int snum)
+{
+    if(snum == SIGWINCH) {
+        resize_caught=1;
+    }
+}
 
 int main(int argc, char *argv[]) {
     std::cout << "smartfzf works!" << std::endl;
@@ -19,8 +29,12 @@ int main(int argc, char *argv[]) {
 
     Renderer r(ref);
     r.render_window();
+    std::signal(SIGWINCH, handle_resize);
     while (true) {
-        continue;
+        if(resize_caught) {
+            r.rerender_window();
+            resize_caught=0;
+        }
     }
     return 0;
 }

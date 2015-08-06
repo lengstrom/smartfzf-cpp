@@ -16,8 +16,8 @@ void Renderer::render_window() {
     wrefresh(win);
 }
 
-void Renderer::rerender_window(int signo) {
-    delete win;
+void Renderer::rerender_window() {
+    delwin(win);
     render_window();
 }
 
@@ -55,6 +55,5 @@ void Renderer::start_ncurses() {
 }
 
 Renderer::Renderer(const std::vector<std::string> &lines_to_write) : lines_to_write(lines_to_write) {
-    std::signal(28, rerender_window); // SIGWINCH == 28
     start_ncurses();
 }
