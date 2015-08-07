@@ -10,6 +10,7 @@ struct Renderer {
     WINDOW * win;
     int win_height;
     int win_width;
+    int line_to_highlight;
 
     Renderer(const std::vector<std::string> &lines);
     void start_ncurses();
@@ -17,6 +18,8 @@ struct Renderer {
     void update_contents();
     void render_window();
     void rerender_window(int signo);
+    void highlight_line(int num);
+    
     static void resize_handler(int signo);
     ~Renderer();
 private:
