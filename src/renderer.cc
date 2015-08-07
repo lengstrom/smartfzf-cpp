@@ -87,4 +87,3 @@ Renderer::Renderer(const std::vector<std::string> &lines_to_write) : lines_to_wr
 void Renderer::resize_handler(int signo) {
     instance->rerender_window(signo);
 }
-

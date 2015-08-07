@@ -15,6 +15,7 @@ add_executable(
     smartfzf src/main.cc
              src/smartfzf.cc
              src/renderer.cc
+             src/fs.cc
 )
 
 target_link_libraries(smartfzf ${Boost_LIBRARIES})
