@@ -2,7 +2,8 @@
 #include "fs.h"
 #include "boost/filesystem.hpp"
 
-using boost::filesystem;
+using std::vector;
+using namespace boost::filesystem;
 
 vector<path> dir_contents(const path &dir_path) {
     /* 
