@@ -23,8 +23,8 @@ find_package(Boost REQUIRED COMPONENTS system filesystem
 find_package(Curses REQUIRED)
 find_package(Readline REQUIRED)
 
-include_directories(include ${Boost_INCLUDE_DIRS})
-include_directories(include ${CURSES_INCLUDE_DIR})
+include_directories(include ${Boost_INCLUDE_DIRS} 
+    ${CURSES_INCLUDE_DIR} ${READLINE_INCLUDE_DIR})
 
 add_executable(
     smartfzf src/main.cc
@@ -33,8 +33,8 @@ add_executable(
              src/fs.cc
 )
 
-target_link_libraries(smartfzf ${Boost_LIBRARIES})
-target_link_libraries(smartfzf ${CURSES_LIBRARIES})
+target_link_libraries(smartfzf ${Boost_LIBRARIES} ${CURSES_LIBRARIES}
+    ${READLINE_LIBRARY})
 
 file(GLOB tests test/*.cc)
 foreach(test ${tests})
