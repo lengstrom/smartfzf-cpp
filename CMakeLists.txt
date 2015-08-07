@@ -1,12 +1,27 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0) # for multiline strings
+
+# ensure we're in the build directory
+
+if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+    MESSAGE(FATAL_ERROR "The current directory is ${CMAKE_CURRENT_BINARY_DIR}.\
+    Please delete the temporary cmake files `rm -rf CMakeCache.txt CMakeFiles/`,\
+    `cd` to the build directory (`cd build/`)\
+    and run the script again (`cmake ..`).")
+else()
+    MESSAGE(STATUS "Current directory: ${CMAKE_CURRENT_BINARY_DIR}")
+endif()
+
 project(smartfzf)
 
 enable_testing()
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_BINARY_DIR}/modules/")
 set(Boost_USE_STATIC_LIBS ON)
+
 find_package(Boost REQUIRED COMPONENTS system filesystem
     unit_test_framework)
 find_package(Curses REQUIRED)
+find_package(Readline REQUIRED)
 
 include_directories(include ${Boost_INCLUDE_DIRS})
 include_directories(include ${CURSES_INCLUDE_DIR})
