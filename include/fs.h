@@ -2,18 +2,19 @@
 #define GUARD_fs_h
 
 #include <map>
-#include <string>
 #include <vector>
 #include "boost/filesystem.hpp" // whats the diff between < and "s??
+
 struct Path_Node {
     // lazily evaluated tree structure for storing files implemented as a POD struct
     // don't get child_dirs unless absolutely necessary
     Path_Node * parent_dir;
-    std::string dir_name;
+    bool no_parent = false;
+    boost::filesystem::path &dir_name;
     std::vector<boost::filesystem::path> contents;
     std::map<boost::filesystem::path, Path_Node> child_dirs;
 } Path_Node;
 
-std::vector<boost::filesystem::path> dir_contents(const boost::filesystem::path &dir_path) ;
+std::vector<boost::filesystem::path> dir_contents(const boost::filesystem::path &dir_path);
 
 #endif
