@@ -6,13 +6,15 @@
 #include <ncurses.h>
 
 struct Renderer {
-    const std::vector<std::string> &lines_to_write;
+    std::vector<std::string> &lines_to_write;
     WINDOW * win;
     int win_height;
     int win_width;
     int line_to_highlight;
 
-    Renderer(const std::vector<std::string> &lines);
+    void write(const std::string&);
+    void set_text(const std::vector<std::string>&);
+    Renderer(std::vector<std::string> &lines);
     void start_ncurses();
     void end_ncurses();
     void update_contents();

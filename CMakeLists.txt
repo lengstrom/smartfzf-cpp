@@ -26,11 +26,11 @@ find_package(Readline REQUIRED)
 include_directories(include ${Boost_INCLUDE_DIRS} 
     ${CURSES_INCLUDE_DIR} ${READLINE_INCLUDE_DIR})
 
+#find all the src files
+file(GLOB srcfiles src/*.cc)
+
 add_executable(
-    smartfzf src/main.cc
-             src/smartfzf.cc
-             src/renderer.cc
-             src/fs.cc
+    smartfzf ${srcfiles}
 )
 
 target_link_libraries(smartfzf ${Boost_LIBRARIES} ${CURSES_LIBRARIES}
