@@ -37,12 +37,24 @@ vector<path> recursive_sorted_dir_contents(const path &dir_path) {
             // way of concatenating vectors without copying objects??
             vector<path*> curr_contents = recursive_sorted_dir_contents(curr_path);
             // merge curr_contents into sorted_contents
+            vector<path*> tmp;
+            tmp.reserve(sorted_contents.size() + curr_contents.size());
+
+            std::merge(curr_contents.begin(), curr_contents.end(),
+                       sorted_contents.begin(), sorted_contents.end(),
+                       std::back_inserter(tmp));
         } else {
             appended_contents.push_back(curr_path);
         }
     }
 
     std::sort(appended_contents.begin(), sorted_coments.end());
+
+    vector<path*> final_sorted;
+    std::merge(appended_contents.begin(), appended_contents.end(),
+               sorted_contents.begin(), sorted_contents.end(),
+               final_sorted.begin());
+
     // merge appended_contents into sorted_contents
     return sorted_contents;
 }
