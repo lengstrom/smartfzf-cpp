@@ -21,6 +21,7 @@ struct Renderer {
     void render_window();
     void rerender_window(int signo);
     void highlight_line(int num);
+    void set_position(int);
     
     static void resize_handler(int signo);
     ~Renderer();

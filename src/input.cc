@@ -12,6 +12,7 @@ extern "C" void dummy(char *a)
     return;
 }
 
+/* this might be needed */
 extern "C" int has_input(void)
 {
     return 0;
@@ -64,6 +65,7 @@ void Input::read_char()
     z.push_back(f);
     z.push_back(f);
     renderer_.set_text(z);
+    renderer_.set_position(rl_point);
 }
 
 //Keymap Input::original_map=rl_get_keymap();

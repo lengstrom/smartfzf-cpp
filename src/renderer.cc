@@ -99,3 +99,8 @@ void Renderer::set_text(const std::vector<std::string> &text)
     wclrtoeol(win);
     mvwprintw(win,3,0,line.c_str());
 }*/
+
+void Renderer::set_position(int point)
+{
+        wmove(win,win_height-line_to_highlight-2,point+2);
+}
