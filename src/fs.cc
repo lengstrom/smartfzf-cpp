@@ -60,10 +60,3 @@ vector<const path*> recursive_sorted_dir_contents(const path &dir_path) {
     // merge appended_contents into sorted_contents
     return final_sorted;
 }
-
-// Path_Node * build_path_node(const path &dir_path) { //remember to add a parent (if applicable)
-//     Path_Node * node;
-//     node->dir_name = dir_path;
-//     node->contents = dir_contents(dir_path);
-//     return node;
-// }
