@@ -32,10 +32,11 @@ vector<const path*> sorted_dir_contents(const path &dir_path) {
     return contents;
 }
 
-bool check_for_project(Path_Node &dir_path, std::map<path*, Path_Node*> &children) {
-    // assume that dir_path is a directory
-    for (std::map<path*, Path_Node*>::iterator itr = children.begin(); itr != children.end(); itr++) {
-        string file_name = iter->first->filename();
+
+bool check_for_project(const struct Path_Node &dir_path, std::map<const path*, const struct Path_Node*> &children) {
+    //assume that dir_path is a directory
+    for (std::map<path*, const struct Path_Node*>::iterator itr = children.begin(); itr != children.end(); itr++) {
+        string file_name = itr->first->filename();
         for (int i = 0; i < PROJECT_MARKERS_SIZE; i++) {
             if (PROJECT_MARKERS[i] == file_name) {
                 return true;
@@ -45,6 +46,7 @@ bool check_for_project(Path_Node &dir_path, std::map<path*, Path_Node*> &childre
 
     return false;
 }
+
 
 // recursively copy dir contents
 vector<const path*> recursive_sorted_dir_contents(const path &dir_path) {
