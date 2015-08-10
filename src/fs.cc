@@ -32,11 +32,11 @@ vector<const path*> sorted_dir_contents(const path &dir_path) {
     return contents;
 }
 
-
-bool check_for_project(const struct Path_Node &dir_path, std::map<const path*, const struct Path_Node*> &children) {
-    //assume that dir_path is a directory
-    for (std::map<path*, const struct Path_Node*>::iterator itr = children.begin(); itr != children.end(); itr++) {
-        string file_name = itr->first->filename();
+bool check_for_project(const Path_Node &dir_node) {
+    // assume that dir_path is a directory
+    vector<const path*> contents = dir_node.contents;
+    for (auto itr : contents) {
+        string file_name = itr->filename().string();
         for (int i = 0; i < PROJECT_MARKERS_SIZE; i++) {
             if (PROJECT_MARKERS[i] == file_name) {
                 return true;
@@ -44,7 +44,7 @@ bool check_for_project(const struct Path_Node &dir_path, std::map<const path*, c
         }
     }
 
-    return false;
+    return true;
 }
 
 
