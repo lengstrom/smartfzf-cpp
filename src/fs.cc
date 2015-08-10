@@ -1,10 +1,16 @@
 #include <vector>
 #include <algorithm>
 #include "fs.h"
+#include <string>
+#include <map>
 #include "boost/filesystem.hpp"
 
 using std::vector;
+using std::string;
 using namespace boost::filesystem;
+
+const string PROJECT_MARKERS[2] = {".git", ".svn"};
+const int PROJECT_MARKERS_SIZE = 2;
 
 vector<const path*> sorted_dir_contents(const path &dir_path) {
     /* 
@@ -26,6 +32,20 @@ vector<const path*> sorted_dir_contents(const path &dir_path) {
     return contents;
 }
 
+bool check_for_project(Path_Node &dir_path, std::map<path*, Path_Node*> &children) {
+    // assume that dir_path is a directory
+    for (std::map<path*, Path_Node*>::iterator itr = children.begin(); itr != children.end(); itr++) {
+        string file_name = iter->first->filename();
+        for (int i = 0; i < PROJECT_MARKERS_SIZE; i++) {
+            if (PROJECT_MARKERS[i] == file_name) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 // recursively copy dir contents
 vector<const path*> recursive_sorted_dir_contents(const path &dir_path) {
     vector<const path*> appended_contents;
@@ -33,11 +53,9 @@ vector<const path*> recursive_sorted_dir_contents(const path &dir_path) {
 
     directory_iterator end_itr;
     for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
-        const path * curr_path = &(itr->path()); // Must be a better way of doing this
+        const path * curr_path = &(itr->path());
         if (is_directory(itr->status())) {
-            // way of concatenating stdvectors without copying objects??
             vector<const path*> curr_contents = recursive_sorted_dir_contents(*curr_path);
-            // merge curr_contents into sorted_contents
             vector<const path*> tmp;
             tmp.reserve(sorted_contents.size() + curr_contents.size());
             std::merge(curr_contents.begin(), curr_contents.end(),
@@ -50,13 +68,11 @@ vector<const path*> recursive_sorted_dir_contents(const path &dir_path) {
     }
 
     std::sort(appended_contents.begin(), sorted_contents.end());
-
     vector<const path*> final_sorted;
     final_sorted.reserve(appended_contents.size() + sorted_contents.size());
     std::merge(appended_contents.begin(), appended_contents.end(),
                sorted_contents.begin(), sorted_contents.end(),
                final_sorted.begin());
 
-    // merge appended_contents into sorted_contents
     return final_sorted;
 }

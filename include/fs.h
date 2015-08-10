@@ -3,7 +3,7 @@
 
 #include <map>
 #include <vector>
-#include "boost/filesystem.hpp" // whats the diff between < and "s??
+#include "boost/filesystem.hpp"
 
 struct Path_Node {
     // lazily evaluated tree structure for storing files implemented as a POD struct
@@ -16,7 +16,6 @@ struct Path_Node {
 } Path_Node;
 
 std::vector<const boost::filesystem::path*> dir_contents(const boost::filesystem::path * dir_path);
-
 std::vector<const boost::filesystem::path*> recursive_sorted_dir_contents(const boost::filesystem::path * dir_path);
 
 #endif
