@@ -30,6 +30,9 @@ vector<const path*> sorted_dir_contents(const path *dir_path) {
     }
 
     std::sort(contents.begin(), contents.end());
+    for (vector<const path*>::iterator iterator = contents.begin(); iterator != contents.end(); iterator++) {
+        std::cout << (*iterator)->string() << std::endl;
+    }
     return contents;
 }
 
@@ -49,7 +52,7 @@ bool check_for_project(const Path_Node *dir_node) {
 }
 
 // recursively copy dir contents
-vector<const path*> recursive_sorted_dir_contents(const path *dir_path) {
+vector<const path*> recursive_sorted_contents(const path *dir_path) {
     vector<const path*> appended_contents;
     vector<const path*> sorted_contents;
 
@@ -57,7 +60,7 @@ vector<const path*> recursive_sorted_dir_contents(const path *dir_path) {
     for (directory_iterator itr(*dir_path); itr != end_itr; itr++) {
         const path curr_path = itr->path();
         if (is_directory(itr->status())) {
-            vector<const path*> curr_contents = recursive_sorted_dir_contents(&curr_path);
+            vector<const path*> curr_contents = recursive_sorted_contents(&curr_path);
             vector<const path*> tmp;
             tmp.reserve(sorted_contents.size() + curr_contents.size());
             std::merge(curr_contents.begin(), curr_contents.end(),

@@ -23,10 +23,8 @@ BOOST_AUTO_TEST_CASE(fuzzy_function) {
  
     // Filesystem checking
     path curr_dir = current_path();
-    vector<const path*> dir_contents = sorted_dir_contents(&curr_dir);
-    // for (vector<const path*>::iterator iterator = dir_contents.begin(); iterator != dir_contents.end(); iterator++) {
-    //     std::cout << (*iterator)->string() << std::endl;
-    // }
+    vector<const path*> contents = sorted_dir_contents(&curr_dir);
+
     // std::cout << curr_dir << std::endl;
  
 }
