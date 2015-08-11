@@ -1,6 +1,7 @@
 #define BOOST_TEST_MODULE "smartfzf"
 #include <boost/test/unit_test.hpp>
 #include "smartfzf.h"
+#include "boost/filesystem.hpp"
 #include "fs.h"
 
 BOOST_AUTO_TEST_CASE(fuzzy_function)
@@ -17,6 +18,5 @@ BOOST_AUTO_TEST_CASE(fuzzy_function)
     BOOST_CHECK(!fz_match("z0","nifez"));
 
     // Filesystem checking
-    BOOST_CHECK();
     
 }
