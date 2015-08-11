@@ -30,10 +30,6 @@ vector<const path*> sorted_dir_contents(const path *dir_path) {
         contents.push_back(&curr_file);
     }
 
-    for (vector<const path*>::iterator itr = contents.begin(); itr != contents.end(); itr++) {
-        std::cout << (*itr)->string() << "/";
-    }
-
     std::sort(contents.begin(), contents.end());
     return contents;
 }
