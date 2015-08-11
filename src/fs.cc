@@ -3,6 +3,7 @@
 #include "fs.h"
 #include <string>
 #include <map>
+#include <iostream>
 #include "boost/filesystem.hpp"
 
 using std::vector;
@@ -11,10 +12,6 @@ using namespace boost::filesystem;
 
 const string PROJECT_MARKERS[2] = {".git", ".svn"};
 const int PROJECT_MARKERS_SIZE = 2;
-
-bool test_func() {
-    return true;
-}
 
 vector<const path*> sorted_dir_contents(const path *dir_path) {
     /* 
@@ -28,8 +25,13 @@ vector<const path*> sorted_dir_contents(const path *dir_path) {
     vector<const path*> contents;
     directory_iterator end_itr; // default constructor = object past end
     for (directory_iterator itr(*dir_path); itr != end_itr; itr++) {
-        const path * curr_file = &(itr->path());
-        contents.push_back(curr_file);
+        const path curr_file = itr->path();
+        
+        contents.push_back(&curr_file);
+    }
+
+    for (vector<const path*>::iterator itr = contents.begin(); itr != contents.end(); itr++) {
+        std::cout << (*itr)->string() << "/";
     }
 
     std::sort(contents.begin(), contents.end());
@@ -58,9 +60,9 @@ vector<const path*> recursive_sorted_dir_contents(const path *dir_path) {
 
     directory_iterator end_itr;
     for (directory_iterator itr(*dir_path); itr != end_itr; itr++) {
-        const path * curr_path = &(itr->path());
+        const path curr_path = itr->path();
         if (is_directory(itr->status())) {
-            vector<const path*> curr_contents = recursive_sorted_dir_contents(curr_path);
+            vector<const path*> curr_contents = recursive_sorted_dir_contents(&curr_path);
             vector<const path*> tmp;
             tmp.reserve(sorted_contents.size() + curr_contents.size());
             std::merge(curr_contents.begin(), curr_contents.end(),
@@ -68,7 +70,7 @@ vector<const path*> recursive_sorted_dir_contents(const path *dir_path) {
                        tmp.begin());
             sorted_contents.swap(tmp);
         } else {
-            appended_contents.push_back(curr_path);
+            appended_contents.push_back(&curr_path);
         }
     }
 

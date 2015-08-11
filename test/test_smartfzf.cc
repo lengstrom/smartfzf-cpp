@@ -20,13 +20,12 @@ BOOST_AUTO_TEST_CASE(fuzzy_function) {
     BOOST_CHECK(fz_match("iz","nifez"));
     BOOST_CHECK(!fz_match("zi","nifez"));
     BOOST_CHECK(!fz_match("z0","nifez"));
-    bool t = test_func();
  
     // Filesystem checking
-    // path curr_dir = current_path();
-    // vector<const path*> contents = sorted_dir_contents(&curr_dir);
-    // bool t = test_func();
-    // for (auto itr : contents) {
-    //     std::cout << (*itr) << std::endl;
-    // }
+    path curr_dir = current_path();
+    vector<const path*> contents = sorted_dir_contents(&curr_dir);
+    // std::cout << curr_dir << std::endl;
+    //for (auto itr : contents) {
+    //    std::cout << itr << "/";
+    //}
 }
