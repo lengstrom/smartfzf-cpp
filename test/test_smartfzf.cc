@@ -3,9 +3,12 @@
 #include "smartfzf.h"
 #include "boost/filesystem.hpp"
 #include "fs.h"
+#include <iostream>
 
-BOOST_AUTO_TEST_CASE(fuzzy_function)
-{
+using namespace boost::filesystem;
+using std::vector;
+
+BOOST_AUTO_TEST_CASE(fuzzy_function) {
     // Fuzzy matching 
     BOOST_CHECK(fz_match("Hello","inwqpohapoiuoiueasdfaqloiulops"));
     BOOST_CHECK(fz_match("qphaoi","inwqpohapoiuoiueasdfaqloiulops"));
@@ -18,5 +21,9 @@ BOOST_AUTO_TEST_CASE(fuzzy_function)
     BOOST_CHECK(!fz_match("z0","nifez"));
 
     // Filesystem checking
-    
+    path curr_dir = current_path();
+    vector<const path*> contents = sorted_dir_contents(&curr_dir);
+    for (auto itr : contents) {
+        std::cout << (*itr) << std::endl;
+    }
 }

@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.0) # for multiline strings
-
+cmake_minimum_required(VERSION 3.1) # for multiline strings
+set(CMAKE_CXX_STANDARD 11)
 # ensure we're in the build directory
 
 if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
@@ -51,4 +51,4 @@ foreach(test ${tests})
         --log_level=all
         )
 endforeach(test)
-set_property(TARGET smartfzf PROPERTY CXX_STANDARD 11)
+#set_property(TARGET smartfzf PROPERTY CXX_STANDARD 11)

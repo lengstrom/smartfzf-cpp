@@ -15,8 +15,7 @@ struct Path_Node {
     std::map<const boost::filesystem::path*, Path_Node*> child_dirs;
 };
 
-std::vector<const boost::filesystem::path*> dir_contents(const boost::filesystem::path * dir_path);
-std::vector<const boost::filesystem::path*> recursive_sorted_dir_contents(const boost::filesystem::path * dir_path);
-bool check_for_project(const Path_Node &dir_node);
-
+std::vector<const boost::filesystem::path*> sorted_dir_contents(const boost::filesystem::path *dir_path);
+bool check_for_project(const Path_Node *dir_node);
+std::vector<const boost::filesystem::path*> recursive_sorted_dir_contents(const boost::filesystem::path *dir_path);
 #endif
