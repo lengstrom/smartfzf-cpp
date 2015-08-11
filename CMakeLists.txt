@@ -39,7 +39,7 @@ target_link_libraries(smartfzf ${CURSES_LIBRARIES})
 file(GLOB tests test/*.cc)
 foreach(test ${tests})
     get_filename_component(bname ${test} NAME_WE)
-    add_executable(${bname} ${test} src/smartfzf.cc)
+    add_executable(${bname} ${test} src/smartfzf.cc src/fs.cc)
     target_link_libraries(${bname} ${Boost_LIBRARIES})
     target_link_libraries(${bname} ${CURSES_LIBRARIES})
     set_target_properties(${bname} PROPERTIES 

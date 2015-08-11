@@ -8,7 +8,6 @@
 using namespace boost::filesystem;
 using std::vector;
 
-//bool t = test_func();
 
 BOOST_AUTO_TEST_CASE(fuzzy_function) {
     // Fuzzy matching 
@@ -21,7 +20,8 @@ BOOST_AUTO_TEST_CASE(fuzzy_function) {
     BOOST_CHECK(fz_match("iz","nifez"));
     BOOST_CHECK(!fz_match("zi","nifez"));
     BOOST_CHECK(!fz_match("z0","nifez"));
-
+    bool t = test_func();
+ 
     // Filesystem checking
     // path curr_dir = current_path();
     // vector<const path*> contents = sorted_dir_contents(&curr_dir);
