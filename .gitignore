@@ -67,5 +67,4 @@ CMakeCache.txt
 build/test
 build/Testing
 build/*.cmake
-test
 *cmake
