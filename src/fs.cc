@@ -12,6 +12,10 @@ using namespace boost::filesystem;
 const string PROJECT_MARKERS[2] = {".git", ".svn"};
 const int PROJECT_MARKERS_SIZE = 2;
 
+bool test_func() {
+    return true;
+}
+
 vector<const path*> sorted_dir_contents(const path *dir_path) {
     /* 
      * Possible issues:

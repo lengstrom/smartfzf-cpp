@@ -18,4 +18,6 @@ struct Path_Node {
 std::vector<const boost::filesystem::path*> sorted_dir_contents(const boost::filesystem::path *dir_path);
 bool check_for_project(const Path_Node *dir_node);
 std::vector<const boost::filesystem::path*> recursive_sorted_dir_contents(const boost::filesystem::path *dir_path);
+bool test_func();
+
 #endif
