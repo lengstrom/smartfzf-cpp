@@ -26,7 +26,6 @@ vector<const path*> sorted_dir_contents(const path *dir_path) {
     directory_iterator end_itr; // default constructor = object past end
     for (directory_iterator itr(*dir_path); itr != end_itr; itr++) {
         const path curr_file = itr->path();
-        
         contents.push_back(&curr_file);
     }
 
