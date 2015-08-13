@@ -4,6 +4,7 @@
 #include "boost/filesystem.hpp"
 #include "fs.h"
 #include <iostream>
+#include <algorithm>
 
 using namespace boost::filesystem;
 using std::vector;
@@ -23,8 +24,15 @@ BOOST_AUTO_TEST_CASE(fuzzy_function) {
  
     // Filesystem checking
     path curr_dir = current_path();
-    vector<const path*> contents = sorted_dir_contents(&curr_dir);
+    vector<path> contents = sorted_dir_contents(curr_dir);
+    path contents_against[2] = {"sandbox", "test_smartfzf.cc"};
+    bool res = true;
+    for (int i =0 ; i < 2; i++) {
+        if (contents_against[i] != contents[i].filename().string()) {
+            res = false;
+        }
+    }
 
-    // std::cout << curr_dir << std::endl;
- 
+    BOOST_CHECK(res);
+    BOOST_CHECK(!check_for_project(contents));
 }
