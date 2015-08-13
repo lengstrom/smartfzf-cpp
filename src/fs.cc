@@ -47,33 +47,33 @@ bool check_for_project(vector<path> &contents) {
     return false;
 }
 
-// // recursively copy dir contents
-// vector<const path> recursive_sorted_contents(const path &dir_path) {
-//     vector<const path> appended_contents;
-//     vector<const path> sorted_contents;
+// recursively copy dir contents
+vector<path> recursive_sorted_contents(path &dir_path) {
+    vector<path> appended_contents;
+    vector<path> sorted_contents;
 
-//     directory_iterator end_itr;
-//     for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
-//         const path curr_path = itr->path();
-//         if (is_directory(itr->status())) {
-//             vector<const path> curr_contents = recursive_sorted_contents(curr_path);
-//             vector<const path> tmp;
-//             tmp.reserve(sorted_contents.size() + curr_contents.size());
-//             std::merge(curr_contents.begin(), curr_contents.end(),
-//                        sorted_contents.begin(), sorted_contents.end(),
-//                        tmp.begin());
-//             sorted_contents.swap(tmp);
-//         } else {
-//             appended_contents.push_back(curr_path);
-//         }
-//     }
+    directory_iterator end_itr;
+    for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
+        path curr_path = itr->path();
+        if (is_directory(itr->status())) {
+            vector<path> curr_contents = recursive_sorted_contents(curr_path);
+            vector<path> tmp;
+            tmp.reserve(sorted_contents.size() + curr_contents.size());
+            std::merge(curr_contents.begin(), curr_contents.end(),
+                       sorted_contents.begin(), sorted_contents.end(),
+                       tmp.begin());
+            sorted_contents.swap(tmp);
+        } else {
+            appended_contents.push_back(curr_path);
+        }
+    }
 
-//     std::sort(appended_contents.begin(), sorted_contents.end());
-//     vector<const path> final_sorted;
-//     final_sorted.reserve(appended_contents.size() + sorted_contents.size());
-//     std::merge(appended_contents.begin(), appended_contents.end(),
-//                sorted_contents.begin(), sorted_contents.end(),
-//                final_sorted.begin());
+    std::sort(appended_contents.begin(), sorted_contents.end());
+    vector<path> final_sorted;
+    final_sorted.reserve(appended_contents.size() + sorted_contents.size());
+    std::merge(appended_contents.begin(), appended_contents.end(),
+               sorted_contents.begin(), sorted_contents.end(),
+               final_sorted.begin());
 
-//     return final_sorted;
-// }
+    return final_sorted;
+}
