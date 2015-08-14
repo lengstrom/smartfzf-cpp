@@ -49,6 +49,7 @@ bool check_for_project(vector<path> &contents) {
 
 // recursively copy dir contents
 vector<path> recursive_sorted_contents(path &dir_path) {
+    std::cout << dir_path << std::endl;
     vector<path> appended_contents;
     vector<path> sorted_contents;
 
@@ -67,8 +68,13 @@ vector<path> recursive_sorted_contents(path &dir_path) {
             appended_contents.push_back(curr_path);
         }
     }
-
+    
+    std::cout << dir_path << std::endl;
+    for (auto i : appended_contents) {
+        std::cout << i << std::endl;
+    }
     std::sort(appended_contents.begin(), sorted_contents.end());
+
     vector<path> final_sorted;
     final_sorted.reserve(appended_contents.size() + sorted_contents.size());
     std::merge(appended_contents.begin(), appended_contents.end(),
