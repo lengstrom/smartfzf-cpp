@@ -21,7 +21,7 @@ extern "C" int has_input(void)
 int Input::rl_getc(FILE*unused)
 {
     (void)(unused);
-    return current_char;
+    //return current_char;
 }
 
 int Input::current_char;
@@ -48,9 +48,9 @@ void Input::read_char()
 {
     int a = wgetch(renderer_.win);
     /*rl_pending_input=a;*/
-    //rl_stuff_char(a);
+    rl_stuff_char(a);
     //fwrite(&a,sizeof(int),1,rstream);
-    current_char = a;
+    //current_char = a;
     rl_callback_read_char();
     std::string f = rl_line_buffer;
     std::vector<std::string> z;
