@@ -33,7 +33,7 @@ Input::Input(Renderer &renderer) : renderer_(renderer)
 
     rl_getc_function=Input::rl_getc;
 
-    ostream = fopen("/dev/null","w");
+    ostream = fopen("./please","w");
     rl_outstream=ostream;
     rl_callback_handler_install("",dummy);
     //set_insert_to_insret();
