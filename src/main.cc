@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "smartfzf.h"
-#include "renderer.h"
+#include "input.h"
 
 using std::vector;
 using std::string;
@@ -15,12 +15,11 @@ int main(int argc, char *argv[]) {
     lines_to_render.push_back("consequatur, vel illum qui dolorem eum fugiat quo volupta");
     lines_to_render.push_back("consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore");
 
-    const vector<string> &ref = lines_to_render;
-
-    Renderer r(ref);
+    Renderer r(lines_to_render);
     r.render_window();
+    Input i(r);
     while (true) {
-        continue;
-    }
+       i.read_char();
+    } 
     return 0;
 }

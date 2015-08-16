@@ -17,7 +17,6 @@ void Renderer::render_window() {
     win = newwin(win_height, win_width, 0, 0);
 
     update_contents();
-    redrawwin(win);
     wrefresh(win);
 }
 
@@ -30,10 +29,10 @@ void Renderer::rerender_window(int signo) {
     werase(win);
     update_contents();
     wrefresh(win);
-    redrawwin(win);
 }
 
 Renderer::~Renderer() {
+    delwin(win); // frees memory
     end_ncurses();
 }
 
@@ -49,13 +48,13 @@ void Renderer::update_contents() {
         if (line == line_to_highlight) {
             mvwaddch(win, row, 0, '>');
             mvwaddch(win, row, 1, ' ');
-            for (int col = 2; col < num_chars_to_write; col++) {
+            for (int col = 2; col < num_chars_to_write+2; col++) {
                 mvwaddch(win, row, col, curr_line[col - 2]);
             }
         } else {
             mvwaddch(win, row, 0, ' ');
             mvwaddch(win, row, 1, ' ');
-            for (int col = 2; col < num_chars_to_write; col++) {
+            for (int col = 2; col < num_chars_to_write+2; col++) {
                 mvwaddch(win, row, col, curr_line[col - 2]);
             }
         }
@@ -73,11 +72,11 @@ void Renderer::start_ncurses() {
     cbreak();
     noecho();
     intrflush(stdscr, false);
-    keypad(stdscr, true);
+    keypad(stdscr, false);
     //atexit(end_ncurses);
 }
 
-Renderer::Renderer(const std::vector<std::string> &lines_to_write) : lines_to_write(lines_to_write) {
+Renderer::Renderer(std::vector<std::string> &lines_to_write) : lines_to_write(lines_to_write) {
     line_to_highlight = 0;
     instance = this;
     std::signal(28, Renderer::resize_handler); // SIGWINCH == 28
@@ -86,4 +85,22 @@ Renderer::Renderer(const std::vector<std::string> &lines_to_write) : lines_to_wr
 
 void Renderer::resize_handler(int signo) {
     instance->rerender_window(signo);
+}
+
+void Renderer::set_text(const std::vector<std::string> &text)
+{
+    lines_to_write = text;
+    rerender_window(28);
+}
+
+/*void Renderer::write(const std::string &line)
+{
+    wmove(win,3,0);
+    wclrtoeol(win);
+    mvwprintw(win,3,0,line.c_str());
+}*/
+
+void Renderer::set_position(int point)
+{
+        wmove(win,win_height-line_to_highlight-2,point+2);
 }
