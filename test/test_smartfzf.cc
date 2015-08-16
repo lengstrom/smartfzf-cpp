@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(fuzzy_function) {
         }
     }
     BOOST_CHECK(res);
-    BOOST_CHECK(!check_for_project(contents));
+    BOOST_CHECK(!is_project(contents));
     
     vector<path> all_contents = recursive_sorted_contents(curr_dir);
     std::cout << "Getting all contents" << std::endl;
