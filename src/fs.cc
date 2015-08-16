@@ -33,7 +33,7 @@ vector<path> sorted_dir_contents(path &dir_path) {
     return contents;
 }
 
-bool check_for_project(vector<path> &contents) {
+bool is_project(vector<path> &contents) {
     // assume that dir_path is a directory
     for (auto itr : contents) {
         string file_name = itr.filename().string();
@@ -56,9 +56,12 @@ vector<path> recursive_sorted_contents(path &dir_path) {
     directory_iterator end_itr;
     for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
         path curr_path = itr->path();
-        // if (curr_path.string().at(0) == ".") {
-        //     continue;
-        // }
+        std::cout << curr_path.filename().string()[0] << std::endl;
+
+        // take out hidden files
+        if (curr_path.filename().string()[0] == '.') {
+            continue;
+        }
 
         if (is_directory(itr->status())) {
             vector<path> dir_contents = recursive_sorted_contents(curr_path);
