@@ -33,7 +33,8 @@ Input::Input(Renderer &renderer) : renderer_(renderer)
 
     rl_getc_function=Input::rl_getc;
 
-    ostream = fopen("./please","w");
+    buffer = new int[300]; // magic number
+    ostream = fmemopen(buffer,300,"w");
     rl_outstream=ostream;
     rl_callback_handler_install("",dummy);
     //set_insert_to_insret();

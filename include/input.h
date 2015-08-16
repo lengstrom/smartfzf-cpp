@@ -16,6 +16,7 @@ class Input {
         void display_associated_fns(void); /* for testing */
         // void set_insert_to_insret();
         FILE *ostream;
+        int *buffer;
         static int rl_getc(FILE*);
         static int current_char;
 
