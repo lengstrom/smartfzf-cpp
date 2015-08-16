@@ -64,8 +64,8 @@ vector<path> recursive_sorted_contents(path &dir_path) {
             vector<path> dir_contents = recursive_sorted_contents(curr_path);
             if (dir_contents.size() > 0) {
                 all_subdirs_size += dir_contents.size();
-                insert_indices.push_back(subdirs_size);
-                all_subdir_contents.insert(subdir_contents.end(), dir_contents.begin(), dir_contents.end());
+                insert_indices.push_back(all_subdirs_size);
+                all_subdir_contents.insert(all_subdir_contents.end(), dir_contents.begin(), dir_contents.end());
             }
         } else {
             appended_contents.push_back(curr_path);
@@ -79,12 +79,12 @@ vector<path> recursive_sorted_contents(path &dir_path) {
 
     if (insert_indices.size() > 1) { // one presorted thing in all_subdir_contents
         vector<path>::iterator last_itr = all_subdir_contents.begin();
-        vector<path>::iterator scnd_last_itr = last + insert_indices[0];
+        vector<path>::iterator scnd_last_itr = last_itr + insert_indices[0];
         for (vector<int>::iterator itr = insert_indices.begin() + 1; itr != insert_indices.end(); itr++) {
             vector<path>::iterator curr = scnd_last_itr + (*itr);
             std::inplace_merge(last_itr, scnd_last_itr, curr);
-            last = scnd_last;
-            scnd_last = curr;
+            last_itr = scnd_last_itr;
+            scnd_last_itr = curr;
         }
     }
 
@@ -97,5 +97,5 @@ vector<path> recursive_sorted_contents(path &dir_path) {
     appended_contents.insert(appended_contents.end(), all_subdir_contents.begin(), all_subdir_contents.end());
     std::inplace_merge(appended_contents.begin(), appended_contents.begin() + appended_contents_size, appended_contents.end());
 
-    return appended_contents
+    return appended_contents;
 }
