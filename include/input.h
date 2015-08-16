@@ -15,11 +15,7 @@ class Input {
         //static Keymap mod_map;
         void display_associated_fns(void); /* for testing */
         // void set_insert_to_insret();
-        FILE *rstream;
-        char *buffer;
         FILE *ostream;
-        char *nonbuffer;
-        size_t len;
         static int rl_getc(FILE*);
         static int current_char;
 

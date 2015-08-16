@@ -28,16 +28,12 @@ int Input::current_char;
 
 Input::Input(Renderer &renderer) : renderer_(renderer)
 {
-    rl_catch_signals=0;
-    rl_catch_sigwinch=0;
     rl_prep_term_function=NULL;
     rl_deprep_term_function=NULL;
 
     rl_getc_function=Input::rl_getc;
 
-    rstream = open_memstream(&buffer,&len);
-    rl_instream = rstream;
-    ostream = open_memstream(&nonbuffer,&len);
+    ostream = fopen("/dev/null","w");
     rl_outstream=ostream;
     rl_change_environment=0;
     rl_callback_handler_install("",dummy);
@@ -46,10 +42,7 @@ Input::Input(Renderer &renderer) : renderer_(renderer)
 
 Input::~Input()
 {
-    fclose(rstream);
     fclose(ostream);
-    free(buffer);
-    free(nonbuffer);
 }
 
 void Input::read_char() 
