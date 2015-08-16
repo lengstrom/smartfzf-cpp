@@ -49,37 +49,53 @@ bool check_for_project(vector<path> &contents) {
 
 // recursively copy dir contents
 vector<path> recursive_sorted_contents(path &dir_path) {
-    std::cout << dir_path << std::endl;
-    vector<path> appended_contents;
-    vector<path> sorted_contents;
-
+    vector<path> appended_contents, all_subdir_contents;
+    vector<int> insert_indices;
+    int all_subdirs_size = 0;
+    int appended_contents_size = 0;
     directory_iterator end_itr;
     for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
         path curr_path = itr->path();
+        // if (curr_path.string().at(0) == ".") {
+        //     continue;
+        // }
+
         if (is_directory(itr->status())) {
-            vector<path> curr_contents = recursive_sorted_contents(curr_path);
-            vector<path> tmp;
-            tmp.reserve(sorted_contents.size() + curr_contents.size());
-            std::merge(curr_contents.begin(), curr_contents.end(),
-                       sorted_contents.begin(), sorted_contents.end(),
-                       tmp.begin());
-            sorted_contents.swap(tmp);
+            vector<path> dir_contents = recursive_sorted_contents(curr_path);
+            if (dir_contents.size() > 0) {
+                all_subdirs_size += dir_contents.size();
+                insert_indices.push_back(subdirs_size);
+                all_subdir_contents.insert(subdir_contents.end(), dir_contents.begin(), dir_contents.end());
+            }
         } else {
             appended_contents.push_back(curr_path);
+            appended_contents_size++;
         }
     }
-    
-    std::cout << dir_path << std::endl;
-    for (auto i : appended_contents) {
-        std::cout << i << std::endl;
+
+    if (all_subdirs_size == 0) { // nothing in all_subdir_contents
+        return appended_contents;
     }
-    std::sort(appended_contents.begin(), sorted_contents.end());
 
-    vector<path> final_sorted;
-    final_sorted.reserve(appended_contents.size() + sorted_contents.size());
-    std::merge(appended_contents.begin(), appended_contents.end(),
-               sorted_contents.begin(), sorted_contents.end(),
-               final_sorted.begin());
+    if (insert_indices.size() > 1) { // one presorted thing in all_subdir_contents
+        vector<path>::iterator last_itr = all_subdir_contents.begin();
+        vector<path>::iterator scnd_last_itr = last + insert_indices[0];
+        for (vector<int>::iterator itr = insert_indices.begin() + 1; itr != insert_indices.end(); itr++) {
+            vector<path>::iterator curr = scnd_last_itr + (*itr);
+            std::inplace_merge(last_itr, scnd_last_itr, curr);
+            last = scnd_last;
+            scnd_last = curr;
+        }
+    }
 
-    return final_sorted;
+    if (appended_contents_size == 0) {
+        return all_subdir_contents;
+    }
+
+    std::sort(appended_contents.begin(), appended_contents.end());
+
+    appended_contents.insert(appended_contents.end(), all_subdir_contents.begin(), all_subdir_contents.end());
+    std::inplace_merge(appended_contents.begin(), appended_contents.begin() + appended_contents_size, appended_contents.end());
+
+    return appended_contents
 }
