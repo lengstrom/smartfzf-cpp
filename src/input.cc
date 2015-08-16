@@ -21,7 +21,7 @@ extern "C" int has_input(void)
 int Input::rl_getc(FILE*unused)
 {
     (void)(unused);
-    //return current_char;
+    return 0;
 }
 
 int Input::current_char;
