@@ -93,9 +93,7 @@ vector<path> recursive_sorted_contents(path &dir_path) {
     }
 
     std::sort(appended_contents.begin(), appended_contents.end());
-
     appended_contents.insert(appended_contents.end(), all_subdir_contents.begin(), all_subdir_contents.end());
     std::inplace_merge(appended_contents.begin(), appended_contents.begin() + appended_contents_size, appended_contents.end());
-
     return appended_contents;
 }
