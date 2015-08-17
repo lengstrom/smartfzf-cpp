@@ -1,10 +1,12 @@
 #include <vector>
 #include <algorithm>
-#include "fs.h"
 #include <string>
 #include <map>
 #include <iostream>
-#include "boost/filesystem.hpp"
+
+#include <boost/filesystem.hpp>
+
+#include "fs.h"
 
 using std::vector;
 using std::string;

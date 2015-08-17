@@ -10,6 +10,10 @@ using std::min;
 
 Renderer *Renderer::instance;
 
+int Renderer::get_char(void)
+{
+    return wgetch(win);
+}
 
 void Renderer::render_window() {
     getmaxyx(stdscr, win_height, win_width);
@@ -37,14 +41,19 @@ Renderer::~Renderer() {
 }
 
 void Renderer::update_contents() {
-    // do some sort of updating
+    std::vector<std::string> lines_to_write = 
+        std::vector<std::string>(items);
+
+    lines_to_write.push_back(current_prompt);
+
     int num_lines_to_write = min(static_cast<int>(lines_to_write.size()), win_height);
 
-    for (int line = 0; line < num_lines_to_write; line++) { // For every line in the window
+    for (int line = 0;
+            line!=num_lines_to_write; line++) { 
         std::string curr_line = lines_to_write[line];
         int num_chars_to_write = min(win_width, static_cast<int>(curr_line.size()));
 
-        int row = win_height - line - 2; // leave one line open for diagnostics etc... 
+        int row = prompt_row - (num_lines_to_write-1) + line; 
         if (line == line_to_highlight) {
             mvwaddch(win, row, 0, '>');
             mvwaddch(win, row, 1, ' ');
@@ -76,31 +85,35 @@ void Renderer::start_ncurses() {
     //atexit(end_ncurses);
 }
 
-Renderer::Renderer(std::vector<std::string> &lines_to_write) : lines_to_write(lines_to_write) {
+Renderer::Renderer(std::vector<std::string> &initial_text) : items(initial_text) {
     line_to_highlight = 0;
+
     instance = this;
     std::signal(28, Renderer::resize_handler); // SIGWINCH == 28
     start_ncurses();
+    render_window();
+    // leave one line open for diagnostics etc... 
+    prompt_row = win_height-2;
+    rerender_window(28);
 }
 
 void Renderer::resize_handler(int signo) {
     instance->rerender_window(signo);
 }
 
-void Renderer::set_text(const std::vector<std::string> &text)
+void Renderer::write_prompt(const std::string &prompt, int position)
 {
-    lines_to_write = text;
+    current_prompt = prompt;
     rerender_window(28);
+    set_position(position);
 }
 
-/*void Renderer::write(const std::string &line)
+void Renderer::set_items(std::vector<std::string> &input)
 {
-    wmove(win,3,0);
-    wclrtoeol(win);
-    mvwprintw(win,3,0,line.c_str());
-}*/
+    items = input;
+}
 
 void Renderer::set_position(int point)
 {
-        wmove(win,win_height-line_to_highlight-2,point+2);
+        wmove(win,prompt_row,point+2);
 }

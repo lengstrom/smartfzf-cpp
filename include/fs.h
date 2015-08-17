@@ -3,7 +3,7 @@
 
 #include <map>
 #include <vector>
-#include "boost/filesystem.hpp"
+#include <boost/filesystem.hpp>
 
 struct Path_Node {
     // lazily evaluated tree structure for storing files implemented as a POD struct
@@ -11,8 +11,8 @@ struct Path_Node {
     Path_Node * parent_dir;
     bool no_parent = false;
     boost::filesystem::path * dir_name;
-    std::vector<const boost::filesystem::path> contents;
-    std::map<const boost::filesystem::path, Path_Node*> child_dirs;
+    std::vector<boost::filesystem::path> contents;
+    std::map<boost::filesystem::path, Path_Node*> child_dirs;
 };
 
 std::vector<boost::filesystem::path> sorted_dir_contents(boost::filesystem::path &dir_path);

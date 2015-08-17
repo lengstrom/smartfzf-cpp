@@ -46,16 +46,12 @@ Input::~Input()
 
 void Input::read_char() 
 {
-    int a = wgetch(renderer_.win);
+    int a = renderer_.get_char();
     /*rl_pending_input=a;*/
     //rl_stuff_char(a);
     //fwrite(&a,sizeof(int),1,rstream);
     current_char = a;
     rl_callback_read_char();
     std::string f = rl_line_buffer;
-    std::vector<std::string> z;
-    z.push_back(f);
-    z.push_back(f);
-    renderer_.set_text(z);
-    renderer_.set_position(rl_point);
+    renderer_.write_prompt(f,rl_point);
 }

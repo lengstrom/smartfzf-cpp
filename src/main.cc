@@ -16,7 +16,6 @@ int main(int argc, char *argv[]) {
     lines_to_render.push_back("consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore");
 
     Renderer r(lines_to_render);
-    r.render_window();
     Input i(r);
     while (true) {
        i.read_char();
