@@ -19,6 +19,7 @@ void Renderer::render_window() {
     getmaxyx(stdscr, win_height, win_width);
     win_height = win_height - 1;
     win = newwin(win_height, win_width, 0, 0);
+    keypad(win,false);
 
     update_contents();
     wrefresh(win);
@@ -81,7 +82,7 @@ void Renderer::start_ncurses() {
     cbreak();
     noecho();
     intrflush(stdscr, false);
-    keypad(stdscr, false);
+    keypad(stdscr, true);
     //atexit(end_ncurses);
 }
 
@@ -115,5 +116,33 @@ void Renderer::set_items(std::vector<std::string> &input)
 
 void Renderer::set_position(int point)
 {
-        wmove(win,prompt_row,point+2);
+    wmove(win,prompt_row,point+2);
+}
+
+void Renderer::highlight_item(int item)
+{
+    line_to_highlight=item;
+    rerender_window(28);
+}
+
+void Renderer::adjust_highlighted_item(int offset)
+{
+    line_to_highlight=line_to_highlight-offset;
+    if(line_to_highlight < 0)
+        line_to_highlight=0;
+    if(line_to_highlight >= items.size())
+        line_to_highlight=items.size()-1;
+    rerender_window(28);
+}
+
+int Renderer::handle_up_arrow(int a, int b)
+{
+    instance->adjust_highlighted_item(+1);
+    return 0;
+}
+
+int Renderer::handle_down_arrow(int a, int b)
+{
+    instance->adjust_highlighted_item(-1);
+    return 0;
 }

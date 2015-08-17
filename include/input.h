@@ -4,6 +4,7 @@
  * more comments go here! */
 #include <cstdio>
 #include <readline/readline.h>
+#include <string>
 #include "renderer.h"
 
 class Input {
@@ -22,7 +23,7 @@ class Input {
     public:
         Input(Renderer&);
         ~Input();
-        void read_char();
+        std::string read_char();
 };
 
 #endif // GUARD_input_h

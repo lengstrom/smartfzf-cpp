@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
+#include <curses.h>
 
 extern "C" void dummy(char *a) 
 {
@@ -33,10 +34,21 @@ Input::Input(Renderer &renderer) : renderer_(renderer)
 
     rl_getc_function=Input::rl_getc;
 
+    rl_bind_keyseq("\\C-[OA",Renderer::handle_up_arrow);
+    rl_bind_keyseq("\\C-[OB",Renderer::handle_down_arrow);
+
+    rl_bind_keyseq("\\C-[[A",Renderer::handle_up_arrow); 
+    rl_bind_keyseq("\\C-[[B",Renderer::handle_down_arrow); 
+
+    rl_bind_keyseq("\\C-M-OA",Renderer::handle_up_arrow); 
+    rl_bind_keyseq("\\C-M-OB",Renderer::handle_down_arrow); 
+
+    rl_bind_keyseq("\\C-M-[A",Renderer::handle_up_arrow); 
+    rl_bind_keyseq("\\C-M-[B",Renderer::handle_down_arrow); 
+
     ostream = fopen("/dev/null","w");
     rl_outstream=ostream;
     rl_callback_handler_install("",dummy);
-    //set_insert_to_insret();
 }
 
 Input::~Input()
@@ -44,14 +56,13 @@ Input::~Input()
     fclose(ostream);
 }
 
-void Input::read_char() 
+std::string Input::read_char() 
 {
     int a = renderer_.get_char();
-    /*rl_pending_input=a;*/
-    //rl_stuff_char(a);
-    //fwrite(&a,sizeof(int),1,rstream);
     current_char = a;
     rl_callback_read_char();
     std::string f = rl_line_buffer;
+
     renderer_.write_prompt(f,rl_point);
+    return f;
 }

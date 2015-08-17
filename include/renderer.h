@@ -30,7 +30,11 @@ private:
 public:
     void write_prompt(const std::string &, int);
     void set_items(std::vector<std::string> &);
-    void highlight_item(int item);
+    void highlight_item(int);
+    void adjust_highlighted_item(int);
+
+    static int handle_up_arrow(int,int);
+    static int handle_down_arrow(int,int);
 
     /* reads character from stdin */
     int get_char(void);
