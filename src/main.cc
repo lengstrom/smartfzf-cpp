@@ -1,24 +1,36 @@
 #include <iostream>
 #include <vector>
+
+#include <boost/filesystem.hpp>
+
 #include "smartfzf.h"
 #include "input.h"
+#include "fs.h"
 
 using std::vector;
 using std::string;
+using boost::filesystem::path;
 
 int main(int argc, char *argv[]) {
     std::cout << "smartfzf works!" << std::endl;
     vector<string> lines_to_render;
-    lines_to_render.push_back("Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium");
-    lines_to_render.push_back("o enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut ");
-    lines_to_render.push_back("dipisci velit, sed quia non numquam eius modi tempora in");
-    lines_to_render.push_back("consequatur, vel illum qui dolorem eum fugiat quo volupta");
-    lines_to_render.push_back("consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore");
+    
+    path current_dir(".");
 
-    Renderer r(lines_to_render);
+    vector<path> dircontents = sorted_dir_contents(current_dir);
+
+    vector<string> dir_strings;
+    for(int i=0; i<dircontents.size(); i++) {
+        dir_strings.push_back(dircontents[i].filename().string());
+    }
+
+    Renderer r(dir_strings);
     Input i(r);
     while (true) {
-       i.read_char();
+        std::string currline = i.read_char();
+        std::vector<std::string> items = 
+            match_from_candidates(currline,dir_strings);
+        r.set_items(items);
     } 
     return 0;
 }

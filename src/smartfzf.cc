@@ -15,6 +15,9 @@ using std::vector;
  * is an in-order subset of the second
  * string */
 bool fz_match(const string &input, const string &against) {
+    if(input.empty())
+        return true;
+
     for (string::const_iterator input_iter = input.begin(),
              against_iter = against.begin(); 
          against_iter != against.end();
@@ -32,12 +35,12 @@ bool fz_match(const string &input, const string &against) {
 /* Given an input string to match to and a vector of candidates (strings) to match to
  * Returns vector of strings that matched using fuzzy_search 
  */
-vector<string> match_from_candidates(const string &input, vector<string> &candidates) 
+vector<string> match_from_candidates(const string &input, const vector<string> &candidates) 
 {
     vector<string> results;
     for (vector<string>::const_iterator it = candidates.begin(); 
             it != candidates.end(); it++) {
-        const string &curr = *it;
+        const string curr = *it;
         if (fz_match(input, curr)) {
             results.push_back(curr);
         }

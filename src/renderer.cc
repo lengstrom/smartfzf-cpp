@@ -86,7 +86,7 @@ void Renderer::start_ncurses() {
     //atexit(end_ncurses);
 }
 
-Renderer::Renderer(std::vector<std::string> &initial_text) : items(initial_text) {
+Renderer::Renderer(std::vector<std::string> initial_text) : items(initial_text) {
     line_to_highlight = 0;
 
     instance = this;
@@ -109,9 +109,10 @@ void Renderer::write_prompt(const std::string &prompt, int position)
     set_position(position);
 }
 
-void Renderer::set_items(std::vector<std::string> &input)
+void Renderer::set_items(std::vector<std::string> input)
 {
     items = input;
+    rerender_window(28);
 }
 
 void Renderer::set_position(int point)

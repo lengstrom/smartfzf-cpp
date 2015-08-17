@@ -10,7 +10,7 @@ private:
     static Renderer *instance; /* to get function pointers for 
                                   c-libraries */
 
-    std::vector<std::string> &items;
+    std::vector<std::string> items;
     std::string current_prompt;
     WINDOW * win;
     int win_height;
@@ -29,7 +29,7 @@ private:
 
 public:
     void write_prompt(const std::string &, int);
-    void set_items(std::vector<std::string> &);
+    void set_items(std::vector<std::string>);
     void highlight_item(int);
     void adjust_highlighted_item(int);
 
@@ -40,13 +40,13 @@ public:
     int get_char(void);
 
     /* do not use generally--overwrites all text */
-    void set_text(const std::vector<std::string>&);
+    void set_text(const std::vector<std::string>);
 
     /* not yet implemented */
     void add_item(const std::string &);
     std::string remove_item(int index);
 
-    Renderer(std::vector<std::string>&);
+    Renderer(std::vector<std::string>);
     ~Renderer();
 };
 
