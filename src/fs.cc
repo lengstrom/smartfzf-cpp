@@ -1,4 +1,5 @@
 #include <vector>
+#include <stdexcept>
 #include <algorithm>
 #include <string>
 #include <map>
@@ -101,4 +102,15 @@ vector<path> recursive_sorted_contents(path &dir_path) {
     appended_contents.insert(appended_contents.end(), all_subdir_contents.begin(), all_subdir_contents.end());
     std::inplace_merge(appended_contents.begin(), appended_contents.begin() + appended_contents_size, appended_contents.end());
     return appended_contents;
+}
+
+std::string get_base_directory(const std::string &input)
+{
+    size_t position;
+    for(position=input.size()-1; 
+            input.at(position) != '/' && position != 0; 
+            position--);
+    if(position == 0)
+        throw std::invalid_argument("Not a filename with directory");
+    return input.substr(0,position);
 }
