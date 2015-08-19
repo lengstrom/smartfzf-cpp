@@ -7,10 +7,8 @@
 
 class Renderer {
 private:
-    static Renderer *instance; /* to get function pointers for 
-                                  c-libraries */
-
-    std::vector<std::string> items;
+    static Renderer *instance; /* to get function pointers for c-libraries */
+    std::vector<std::string> &items;
     std::string current_prompt;
     WINDOW * win;
     int win_height;
@@ -28,8 +26,8 @@ private:
     void set_position(int);
 
 public:
+    // rerender window separately with another function call - shouldn't rerender every single time that we update something
     void write_prompt(const std::string &, int);
-    void set_items(std::vector<std::string>);
     void highlight_item(int);
     void adjust_highlighted_item(int);
 
@@ -38,15 +36,7 @@ public:
 
     /* reads character from stdin */
     int get_char(void);
-
-    /* do not use generally--overwrites all text */
-    void set_text(const std::vector<std::string>);
-
-    /* not yet implemented */
-    void add_item(const std::string &);
-    std::string remove_item(int index);
-
-    Renderer(std::vector<std::string>);
+    Renderer(std::vector<std::string>&);
     ~Renderer();
 };
 

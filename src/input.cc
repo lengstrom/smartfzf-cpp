@@ -7,28 +7,24 @@
 #include <cstdlib>
 #include <curses.h>
 
-extern "C" void dummy(char *a) 
-{
+extern "C" void dummy(char *a) {
     (void)(a);
     return;
 }
 
 /* this might be needed */
-extern "C" int has_input(void)
-{
+extern "C" int has_input(void) {
     return 0;
 }
 
-int Input::rl_getc(FILE*unused)
-{
+int Input::rl_getc(FILE*unused) {
     (void)(unused);
     return current_char;
 }
 
 int Input::current_char;
 
-Input::Input(Renderer &renderer) : renderer_(renderer)
-{
+Input::Input(Renderer &renderer) : renderer_(renderer) {
     rl_prep_term_function=NULL;
     rl_deprep_term_function=NULL;
 
@@ -57,13 +53,11 @@ Input::Input(Renderer &renderer) : renderer_(renderer)
     rl_callback_handler_install("",dummy);
 }
 
-Input::~Input()
-{
+Input::~Input() {
     fclose(ostream);
 }
 
-std::string Input::read_char() 
-{
+std::string Input::read_char()  {
     int a = renderer_.get_char();
     current_char = a;
     rl_callback_read_char();
