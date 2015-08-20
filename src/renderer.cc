@@ -7,6 +7,7 @@
 #include <iostream>
 
 using std::min;
+using std::string;
 Renderer *Renderer::instance;
 
 int Renderer::get_char(void) {
@@ -39,29 +40,34 @@ Renderer::~Renderer() {
 }
 
 void Renderer::update_contents() {
-    std::vector<std::string> lines_to_write = items;
-    lines_to_write.push_back(current_prompt);
-
-    int num_lines_to_write = min(static_cast<int>(lines_to_write.size()), win_height);
-
-    for (int line = 0; line!=num_lines_to_write; line++) { 
-        std::string curr_line = lines_to_write[line];
-        int num_chars_to_write = min(win_width, static_cast<int>(curr_line.size()));
-
-        int row = prompt_row - (num_lines_to_write-1) + line; 
+    // write current prompt statically without having to add it to an array every time
+    int num_rendered_lines = min(static_cast<int>(rendered_lines.size()), win_height);
+    // should check for whether there are more than 3 lines??
+    int prompt_line = 0;
+    
+    int max_chars_per_line = min(win_width, static_cast<int>(current_prompt.size()));
+    // eventually show the last part of the string that's being displayed 
+    render_line(prompt_line, current_prompt, max_chars_per_line);
+    
+    for (int line = 1; line < num_rendered_lines; line++) { 
+        string curr_line = rendered_lines[line];
+        int max_chars_per_line = min(win_width, static_cast<int>(curr_line.size()));
+        int row = prompt_row - (num_rendered_lines - 1) + line + 1;
         if (line == line_to_highlight) {
             mvwaddch(win, row, 0, '>');
             mvwaddch(win, row, 1, ' ');
-            for (int col = 2; col < num_chars_to_write+2; col++) {
-                mvwaddch(win, row, col, curr_line[col - 2]);
-            }
+            render_line(row, curr_line, max_chars_per_line);
         } else {
             mvwaddch(win, row, 0, ' ');
             mvwaddch(win, row, 1, ' ');
-            for (int col = 2; col < num_chars_to_write+2; col++) {
-                mvwaddch(win, row, col, curr_line[col - 2]);
-            }
+            render_line(row, curr_line, max_chars_per_line);
         }
+    }
+}
+
+void Renderer::render_line(int row, string &line, int max_chars) {
+    for (int col = WINDOW_OFFSET_LEFT; col < max_chars - WINDOW_OFFSET_LEFT; col++) {
+        mvwaddch(win, row, col, line[col - WINDOW_OFFSET_LEFT]);
     }
 }
 
@@ -80,9 +86,8 @@ void Renderer::start_ncurses() {
     //atexit(end_ncurses);
 }
 
-Renderer::Renderer(std::vector<std::string> &initial_text) : items(&initial_text) {
+Renderer::Renderer(std::vector<string> &initial_lines) : rendered_lines(initial_lines) {
     line_to_highlight = 0;
-
     instance = this;
     std::signal(28, Renderer::resize_handler); // SIGWINCH == 28
     start_ncurses();
@@ -96,7 +101,7 @@ void Renderer::resize_handler(int signo) {
     instance->rerender_window(signo);
 }
 
-void Renderer::write_prompt(const std::string &prompt, int position) {
+void Renderer::write_prompt(const string &prompt, int position) {
     current_prompt = prompt;
     set_position(position);
 }
@@ -114,8 +119,8 @@ void Renderer::adjust_highlighted_item(int offset) {
     line_to_highlight=line_to_highlight-offset;
     if(line_to_highlight < 0)
         line_to_highlight=0;
-    if(line_to_highlight >= items.size())
-        line_to_highlight=items.size()-1;
+    if(line_to_highlight >= rendered_lines.size())
+        line_to_highlight=rendered_lines.size()-1;
     rerender_window(28);
 }
 

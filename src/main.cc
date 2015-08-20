@@ -29,7 +29,6 @@ int main(int argc, char *argv[]) {
     while (true) {
         std::string currline = i.read_char();
         std::vector<std::string> items =  match_from_candidates(currline,dir_strings);
-        r.set_items(items);
     }
 
     return 0;

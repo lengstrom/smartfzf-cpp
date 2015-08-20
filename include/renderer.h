@@ -8,10 +8,11 @@
 class Renderer {
 private:
     static Renderer *instance; /* to get function pointers for c-libraries */
-    std::vector<std::string> &items;
+    std::vector<std::string> &rendered_lines;
     std::string current_prompt;
     WINDOW * win;
     int win_height;
+    const int WINDOW_OFFSET_LEFT = 2;
     int win_width;
     int line_to_highlight;
     int prompt_row;
@@ -22,8 +23,10 @@ private:
     void end_ncurses();
     void update_contents();
     void render_window();
+    void initialize_window();
     void rerender_window(int signo);
     void set_position(int);
+    void render_line(int, std::string &, int); 
 
 public:
     // rerender window separately with another function call - shouldn't rerender every single time that we update something
