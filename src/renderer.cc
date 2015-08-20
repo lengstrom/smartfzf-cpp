@@ -16,19 +16,17 @@ int Renderer::get_char(void) {
 
 void Renderer::initialize_window() {
     getmaxyx(stdscr, win_height, win_width);
-    win_height = win_height - 1;
     win = newwin(win_height, win_width, 0, 0);
     keypad(win,false);
 
     update_contents();
     wrefresh(win);
 }
-
-void Renderer::rerender_window(int signo) {
+                              
+void Renderer::rerender_window() {
     endwin();
     getmaxyx(stdscr, win_height, win_width);
     wresize(win, win_height, win_width);
-
     werase(win);
     update_contents();
     wrefresh(win);
@@ -41,18 +39,17 @@ Renderer::~Renderer() {
 
 void Renderer::update_contents() {
     // write current prompt statically without having to add it to an array every time
-    int num_rendered_lines = min(static_cast<int>(rendered_lines.size()), win_height);
+    int num_lines_to_render = min(static_cast<int>(rendered_lines.size()), win_height);
     // should check for whether there are more than 3 lines??
-    int prompt_line = 0;
-    
+    int prompt_line = win_height - 1; // line we're going to render the prompt on
     int max_chars_per_line = min(win_width, static_cast<int>(current_prompt.size()));
     // eventually show the last part of the string that's being displayed 
     render_line(prompt_line, current_prompt, max_chars_per_line);
     
-    for (int line = 1; line < num_rendered_lines; line++) { 
+    for (int line = 1; line < num_lines_to_render; line++) { 
         string curr_line = rendered_lines[line];
-        int max_chars_per_line = min(win_width, static_cast<int>(curr_line.size()));
-        int row = prompt_row - (num_rendered_lines - 1) + line + 1;
+        int max_chars_per_line = min(win_width - WINDOW_OFFSET_LEFT, static_cast<int>(curr_line.size()));
+        int row = win_height - 1 - line;
         if (line == line_to_highlight) {
             mvwaddch(win, row, 0, '>');
             mvwaddch(win, row, 1, ' ');
@@ -63,10 +60,12 @@ void Renderer::update_contents() {
             render_line(row, curr_line, max_chars_per_line);
         }
     }
+
+    wmove(win, prompt_line, current_prompt_position + WINDOW_OFFSET_LEFT);
 }
 
 void Renderer::render_line(int row, string &line, int max_chars) {
-    for (int col = WINDOW_OFFSET_LEFT; col < max_chars - WINDOW_OFFSET_LEFT; col++) {
+    for (int col = WINDOW_OFFSET_LEFT; col < max_chars + WINDOW_OFFSET_LEFT; col++) {
         mvwaddch(win, row, col, line[col - WINDOW_OFFSET_LEFT]);
     }
 }
@@ -86,33 +85,26 @@ void Renderer::start_ncurses() {
     //atexit(end_ncurses);
 }
 
-Renderer::Renderer(std::vector<string> &initial_lines) : rendered_lines(initial_lines) {
+Renderer::Renderer(std::vector<string> &initial_lines, string &initial_prompt_line) : rendered_lines(initial_lines), current_prompt(initial_prompt_line) {
     line_to_highlight = 0;
     instance = this;
     std::signal(28, Renderer::resize_handler); // SIGWINCH == 28
     start_ncurses();
     initialize_window();
     // leave one line open for diagnostics etc... 
-    prompt_row = win_height-2;
-    rerender_window(28);
 }
 
 void Renderer::resize_handler(int signo) {
-    instance->rerender_window(signo);
+    instance->rerender_window();
 }
 
 void Renderer::write_prompt(const string &prompt, int position) {
     current_prompt = prompt;
-    set_position(position);
-}
-
-void Renderer::set_position(int point) {
-    wmove(win,prompt_row,point+2);
+    current_prompt_position = position;
 }
 
 void Renderer::highlight_item(int item) {
-    line_to_highlight=item;
-    rerender_window(28);
+    line_to_highlight = item;
 }
 
 void Renderer::adjust_highlighted_item(int offset) {
@@ -121,7 +113,6 @@ void Renderer::adjust_highlighted_item(int offset) {
         line_to_highlight=0;
     if(line_to_highlight >= rendered_lines.size())
         line_to_highlight=rendered_lines.size()-1;
-    rerender_window(28);
 }
 
 int Renderer::handle_up_arrow(int a, int b) {

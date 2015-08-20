@@ -57,7 +57,7 @@ Input::~Input() {
     fclose(ostream);
 }
 
-std::string Input::read_char()  {
+std::string Input::read_char() {
     int a = renderer_.get_char();
     current_char = a;
     rl_callback_read_char();
