@@ -46,7 +46,7 @@ Input::Input(Renderer &renderer) : renderer_(renderer) {
     rl_bind_keyseq("\\e[B",Renderer::handle_down_arrow); 
 
     rl_bind_keyseq("\\e0A",Renderer::handle_up_arrow); 
-    rl_bind_keyseq("\\e0B",Renderer::handle_down_arrow); 
+    rl_bind_keyseq("\\e0B",Renderer::handle_down_arrow);
 
     ostream = fopen("/dev/null","w");
     rl_outstream=ostream;

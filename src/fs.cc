@@ -16,7 +16,7 @@ using namespace boost::filesystem;
 const string PROJECT_MARKERS[2] = {".git", ".svn"};
 const int PROJECT_MARKERS_SIZE = 2;
 
-vector<path> sorted_dir_contents(path &dir_path) {
+vector<string> sorted_dir_contents(path &dir_path) {
     /* 
      * Possible issues:
      * Permissions - unable to read into directory (Does this actually happen???)
@@ -26,22 +26,21 @@ vector<path> sorted_dir_contents(path &dir_path) {
     // For now use naive implementation assuming no errors occur
     // Research done: try catch blocks have 0 performance hit (unless there's an exception, obv)
     // dir_path has type const path
-    vector<path> contents;
+    vector<string> contents;
     directory_iterator end_itr; // default constructor = object past end
     for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
         path curr_file = (*itr).path();
-        contents.push_back(curr_file);
+        contents.push_back(curr_file.filename().string());
     }
    
     return contents;
 }
 
-bool is_project(vector<path> &contents) {
+bool is_project(vector<string> &contents) {
     // assume that dir_path is a directory
     for (auto itr : contents) {
-        string file_name = itr.filename().string();
         for (int i = 0; i < PROJECT_MARKERS_SIZE; i++) {
-            if (PROJECT_MARKERS[i] == file_name) {
+            if (PROJECT_MARKERS[i] == itr) {
                 return true;
             }
         }
@@ -51,30 +50,29 @@ bool is_project(vector<path> &contents) {
 }
 
 // recursively copy dir contents
-vector<path> recursive_sorted_contents(path &dir_path) {
-    vector<path> appended_contents, all_subdir_contents;
+vector<string> recursive_sorted_contents(path &dir_path) {
+    vector<string> appended_contents, all_subdir_contents;
     vector<int> insert_indices;
     int all_subdirs_size = 0;
     int appended_contents_size = 0;
     directory_iterator end_itr;
     for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
         path curr_path = itr->path();
-        std::cout << curr_path.filename().string()[0] << std::endl;
-
+        string curr_basename = curr_path.filename().string();
         // take out hidden files
-        if (curr_path.filename().string()[0] == '.') {
+        if (curr_basename[0] == '.') {
             continue;
         }
 
         if (is_directory(itr->status())) {
-            vector<path> dir_contents = recursive_sorted_contents(curr_path);
+            vector<string> dir_contents = recursive_sorted_contents(curr_path);
             if (dir_contents.size() > 0) {
                 all_subdirs_size += dir_contents.size();
                 insert_indices.push_back(all_subdirs_size);
                 all_subdir_contents.insert(all_subdir_contents.end(), dir_contents.begin(), dir_contents.end());
             }
         } else {
-            appended_contents.push_back(curr_path);
+            appended_contents.push_back(curr_basename);
             appended_contents_size++;
         }
     }
@@ -84,10 +82,10 @@ vector<path> recursive_sorted_contents(path &dir_path) {
     }
 
     if (insert_indices.size() > 1) { // one presorted thing in all_subdir_contents
-        vector<path>::iterator last_itr = all_subdir_contents.begin();
-        vector<path>::iterator scnd_last_itr = last_itr + insert_indices[0];
+        vector<string>::iterator last_itr = all_subdir_contents.begin();
+        vector<string>::iterator scnd_last_itr = last_itr + insert_indices[0];
         for (vector<int>::iterator itr = insert_indices.begin() + 1; itr != insert_indices.end(); itr++) {
-            vector<path>::iterator curr = scnd_last_itr + (*itr);
+            vector<string>::iterator curr = scnd_last_itr + (*itr);
             std::inplace_merge(last_itr, scnd_last_itr, curr);
             last_itr = scnd_last_itr;
             scnd_last_itr = curr;
