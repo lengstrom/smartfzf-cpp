@@ -90,7 +90,8 @@ Renderer::Renderer(string &initial_prompt_line, vector<string> &initial_lines) :
     start_ncurses();
     initialize_window();
     line_to_highlight = 1;
-    // leave one line open for diagnostics etc... 
+    // leave one line open for diagnostics etc...
+    // ^ not for now (just compressed view for now )
 }
 
 void Renderer::set_lines(vector<string> &lines) {
@@ -106,8 +107,9 @@ void Renderer::write_prompt(const string &prompt, int position) {
     current_prompt_position = position;
 }
 
-void Renderer::highlight_item(int item) {
+int Renderer::highlight_item(int item) {
     line_to_highlight = item;
+    return normalize_highlight_position();
 }
 
 int Renderer::adjust_highlighted_item(int offset) {
@@ -120,12 +122,12 @@ int Renderer::normalize_highlight_position() {
     // 0 = no error, no restrictions
     // 1 = no down arrow
     // 2 = no up arrow
-    if(line_to_highlight < 1) {
-        line_to_highlight=1;
+    if (line_to_highlight < 1) {
+        line_to_highlight = 1;
         return 1;
     }
 
-    if(line_to_highlight >= rendered_lines.size() - 1) {
+    if (line_to_highlight >= rendered_lines.size() - 1) {
         line_to_highlight=rendered_lines.size() - 1;
         return 2;
     }

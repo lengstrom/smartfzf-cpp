@@ -19,8 +19,7 @@ private:
     std::string & current_prompt;
 
     static void resize_handler(int signo);
-    void highlight_line(int num);
-    void normalize_highlight_position();
+    int normalize_highlight_position();
     void start_ncurses();
     void end_ncurses();
     void update_contents();
@@ -31,8 +30,8 @@ private:
 public:
     // rerender window separately with another function call - shouldn't rerender every single time that we update something
     void write_prompt(const std::string &, int);
-    void highlight_item(int);
-    void adjust_highlighted_item(int);
+    int highlight_item(int);
+    int adjust_highlighted_item(int);
     void rerender_window();
     void set_lines(std::vector<std::string> &);
     static int handle_up_arrow(int,int);
