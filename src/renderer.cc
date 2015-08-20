@@ -110,20 +110,33 @@ void Renderer::highlight_item(int item) {
     line_to_highlight = item;
 }
 
-void Renderer::adjust_highlighted_item(int offset) {
+int Renderer::adjust_highlighted_item(int offset) {
     line_to_highlight=line_to_highlight+offset;
-    if(line_to_highlight < 0)
-        line_to_highlight=0;
-    if(line_to_highlight >= rendered_lines.size())
-        line_to_highlight=rendered_lines.size()-1;
+    return normalize_highlight_position();
+}
+
+int Renderer::normalize_highlight_position() {
+    // return types
+    // 0 = no error, no restrictions
+    // 1 = no down arrow
+    // 2 = no up arrow
+    if(line_to_highlight < 1) {
+        line_to_highlight=1;
+        return 1;
+    }
+
+    if(line_to_highlight >= rendered_lines.size() - 1) {
+        line_to_highlight=rendered_lines.size() - 1;
+        return 2;
+    }
+
+    return 0;
 }
 
 int Renderer::handle_up_arrow(int a, int b) {
-    instance->adjust_highlighted_item(+1);
-    return 0;
+    return instance->adjust_highlighted_item(+1);
 }
 
 int Renderer::handle_down_arrow(int a, int b) {
-    instance->adjust_highlighted_item(-1);
-    return 0;
+    return instance->adjust_highlighted_item(-1);
 }

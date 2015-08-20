@@ -20,6 +20,7 @@ private:
 
     static void resize_handler(int signo);
     void highlight_line(int num);
+    void normalize_highlight_position();
     void start_ncurses();
     void end_ncurses();
     void update_contents();
