@@ -33,12 +33,13 @@ public:
     void highlight_item(int);
     void adjust_highlighted_item(int);
     void rerender_window();
+    void set_lines(std::vector<std::string> &);
     static int handle_up_arrow(int,int);
     static int handle_down_arrow(int,int);
     
     /* reads character from stdin */
     int get_char(void);
-    Renderer(std::vector<std::string>&, std::string&);
+    Renderer(std::string&, std::vector<std::string>&);
     ~Renderer();
 };
 

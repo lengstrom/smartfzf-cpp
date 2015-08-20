@@ -7,7 +7,9 @@
 #include <iostream>
 
 using std::min;
+using std::vector;
 using std::string;
+
 Renderer *Renderer::instance;
 
 int Renderer::get_char(void) {
@@ -18,9 +20,6 @@ void Renderer::initialize_window() {
     getmaxyx(stdscr, win_height, win_width);
     win = newwin(win_height, win_width, 0, 0);
     keypad(win,false);
-
-    update_contents();
-    wrefresh(win);
 }
                               
 void Renderer::rerender_window() {
@@ -85,13 +84,17 @@ void Renderer::start_ncurses() {
     //atexit(end_ncurses);
 }
 
-Renderer::Renderer(std::vector<string> &initial_lines, string &initial_prompt_line) : rendered_lines(initial_lines), current_prompt(initial_prompt_line) {
-    line_to_highlight = 0;
+Renderer::Renderer(string &initial_prompt_line, vector<string> &initial_lines) : current_prompt(initial_prompt_line) , rendered_lines(initial_lines) {
     instance = this;
     std::signal(28, Renderer::resize_handler); // SIGWINCH == 28
     start_ncurses();
     initialize_window();
+    line_to_highlight = 1;
     // leave one line open for diagnostics etc... 
+}
+
+void Renderer::set_lines(vector<string> &lines) {
+    rendered_lines = lines;
 }
 
 void Renderer::resize_handler(int signo) {
@@ -108,7 +111,7 @@ void Renderer::highlight_item(int item) {
 }
 
 void Renderer::adjust_highlighted_item(int offset) {
-    line_to_highlight=line_to_highlight-offset;
+    line_to_highlight=line_to_highlight+offset;
     if(line_to_highlight < 0)
         line_to_highlight=0;
     if(line_to_highlight >= rendered_lines.size())

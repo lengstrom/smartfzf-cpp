@@ -62,7 +62,6 @@ std::string Input::read_char() {
     current_char = a;
     rl_callback_read_char();
     std::string f = rl_line_buffer;
-
     renderer_.write_prompt(f,rl_point);
     return f;
 }

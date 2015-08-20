@@ -12,7 +12,6 @@ using std::string;
 using boost::filesystem::path;
 
 int main(int argc, char *argv[]) {
-    std::cout << "smartfzf works!" << std::endl;
     vector<string> lines_to_render;
     path current_dir(".");
     vector<path> dircontents = sorted_dir_contents(current_dir);
@@ -21,10 +20,11 @@ int main(int argc, char *argv[]) {
         dir_strings.push_back(dircontents[i].filename().string());
     }
     std::string curr_line = "";
-    Renderer r(dir_strings, curr_line);
+    vector<string> matched_items;
+    Renderer r(curr_line, matched_items);
     Input i(r);
     while (true) {
-        vector<string> items = match_from_candidates(curr_line,dir_strings);
+        matched_items = match_from_candidates(curr_line,dir_strings);
         r.rerender_window();
         curr_line = i.read_char();
     }
