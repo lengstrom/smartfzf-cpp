@@ -19,6 +19,8 @@ int main(int argc, char *argv[]) {
     vector<string> matched_items;
     Renderer r(curr_line, matched_items);
     Input i(r);
+    Path_Node * base_directory;
+    
     while (true) {
         matched_items = match_from_candidates(curr_line,dir_contents);
         r.rerender_window();
