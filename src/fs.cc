@@ -5,7 +5,6 @@
 #include <map>
 #include <iostream>
 #include <boost/filesystem.hpp>
-
 #include "fs.h"
 
 using std::vector;
@@ -71,7 +70,7 @@ vector<string> recursive_sorted_contents(path &dir_path) {
                 all_subdir_contents.insert(all_subdir_contents.end(), dir_contents.begin(), dir_contents.end());
             }
         } else {
-            appended_contents.push_back(curr_basename);
+            appended_contents.push_back(curr_path.string());
             appended_contents_size++;
         }
     }

@@ -33,9 +33,6 @@ BOOST_AUTO_TEST_CASE(get_base_directory_test) {
     BOOST_CHECK(res);
 }
 
-
-
-
 BOOST_AUTO_TEST_CASE(filesystem_test) {
     // Filesystem checking
     vector<string> contents = sorted_dir_contents(base_dir);
@@ -45,9 +42,9 @@ BOOST_AUTO_TEST_CASE(filesystem_test) {
     BOOST_CHECK(!is_project(contents));
 
     // some kind of memory error here
-    // vector<string> all_contents = recursive_sorted_contents(curr_dir);
-    // std::cout << "Getting all contents" << std::endl;
-    // for (auto i : all_contents) {
-    //     std::cout << i << std::endl;
-    //}
+    vector<string> all_contents = recursive_sorted_contents(base_dir);
+    std::cout << "Getting all contents" << std::endl;
+    for (auto i : all_contents) {
+        std::cout << i << std::endl;
+    }
 }
