@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
     base_directory.dir_name = current_directory;
     vector<string> split_path;
     split_path.push_back(current_directory);
+
     while (true) {
         vector<string> dir_contents = sorted_dir_contents(this_dir);
         matched_items = match_from_candidates(curr_line,dir_contents);

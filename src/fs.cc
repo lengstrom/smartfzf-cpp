@@ -102,13 +102,28 @@ vector<string> recursive_sorted_contents(path &dir_path) {
     return appended_contents;
 }
 
-std::string get_base_directory(const std::string &input)
-{
+std::vector<std::string> get_dir_sequence(const std::string &input, const path &base, const bool &err ) {
+    std::vector<std::string> components;
+    path input_path(input);
+    boost::system::error_code ec;
+    path normalized_in_path = canonical(input_path, base, ec);
+    if (ec.value() == boost::system::errc::success) {
+        // valid path
+        
+    } else {
+        return components;
+    }
+    
+}
+
+std::string get_base_directory(const std::string &input) {
     size_t position;
     for(position=input.size()-1; 
-            input.at(position) != '/' && position != 0; 
-            position--);
+        input.at(position) != '/' && position != 0; 
+        position--);
     if(position == 0)
         throw std::invalid_argument("Not a filename with directory");
     return input.substr(0,position);
 }
+
+

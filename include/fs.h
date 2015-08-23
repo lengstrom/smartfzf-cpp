@@ -5,6 +5,7 @@
 #include <vector>
 #include <experimental>
 #include <boost/filesystem.hpp>
+#include <boost/system.hpp>
 
 struct Path_Node {
     // lazily evaluated tree structure for storing files implemented as a POD struct
