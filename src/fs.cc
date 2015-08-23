@@ -4,7 +4,6 @@
 #include <string>
 #include <map>
 #include <iostream>
-
 #include <boost/filesystem.hpp>
 
 #include "fs.h"
@@ -102,28 +101,24 @@ vector<string> recursive_sorted_contents(path &dir_path) {
     return appended_contents;
 }
 
-std::vector<std::string> get_dir_sequence(const std::string &input, const path &base, const bool &err ) {
+std::vector<std::string> dir_components(const std::string &input, const path &base, bool &err ) {
     std::vector<std::string> components;
     path input_path(input);
     boost::system::error_code ec;
     path normalized_in_path = canonical(input_path, base, ec);
     if (ec.value() == boost::system::errc::success) {
-        // valid path
-        
+        path::iterator itr_end = normalized_in_path.end();
+        if (!is_directory(normalized_in_path)) {
+            itr_end--;
+        }
+
+        for (path::iterator itr = normalized_in_path.begin(); itr != itr_end; itr++) {
+            string curr_file  = (*itr).filename().string();
+            components.push_back(curr_file);
+        }
     } else {
-        return components;
+        err = true;
     }
-    
+
+    return components;
 }
-
-std::string get_base_directory(const std::string &input) {
-    size_t position;
-    for(position=input.size()-1; 
-        input.at(position) != '/' && position != 0; 
-        position--);
-    if(position == 0)
-        throw std::invalid_argument("Not a filename with directory");
-    return input.substr(0,position);
-}
-
-

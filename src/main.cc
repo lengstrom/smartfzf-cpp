@@ -12,6 +12,7 @@ using std::string;
 using boost::filesystem::path;
 
 int main(int argc, char *argv[]) {
+    const path base_directory (".");
     vector<string> lines_to_render;
     path this_dir(".");
     
@@ -19,9 +20,7 @@ int main(int argc, char *argv[]) {
     vector<string> matched_items;
     Renderer r(curr_line, matched_items);
     Input i(r);
-    Path_Node * base_directory;
     string current_directory = this_dir.filename().string();
-    base_directory.dir_name = current_directory;
     vector<string> split_path;
     split_path.push_back(current_directory);
 
@@ -29,9 +28,8 @@ int main(int argc, char *argv[]) {
         vector<string> dir_contents = sorted_dir_contents(this_dir);
         matched_items = match_from_candidates(curr_line,dir_contents);
         r.rerender_window();
-        current_directory.contents = dir_contents;
         curr_line = i.read_char();
-        current_directory = get_directory_vector(curr_line);
+        // current_directory = get_directory_vector(curr_line);
     }
 
     return 0;
