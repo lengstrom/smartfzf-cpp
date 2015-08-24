@@ -44,12 +44,26 @@ int main(int argc, char *argv[]) {
     print_string_of_dir_nodes(curr_dir_node);
     exit(1);
 
-    // while (true) {
-    //     vector<string> dir_contents = sorted_dir_contents(this_dir, );
-    //     matched_items = match_from_candidates(curr_line,dir_contents);
-    //     r.rerender_window();
-    //     curr_line = i.read_char();
-    //     // current_directory = get_directory_vector(curr_line);
-    // }
+    while (true) {
+        bool err;
+        vector<string> curr_dir_components = dir_components(curr_line, base_directory, err);
+        if (!err) {
+            std::optional<Path_Node*> list = archived_file_list(curr_dir_components, base_directory);
+            vector<string> dir_contents;
+            if (list) {
+                dir_contents = static_cast<vector<string>>(list);
+            } else {
+                dir_contents = sorted_dir_contents(this_dir, current_directory.size());
+            }    
+            
+            matched_items = match_from_candidates(curr_line,dir_contents);
+        } else {
+            matched_items = curr_dir_components;
+        }
+        
+        r.rerender_window();
+        curr_line = i.read_char();
+        // current_directory = get_directory_vector(curr_line);
+    }
     return 0;
 }

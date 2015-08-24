@@ -102,6 +102,21 @@ vector<string> recursive_sorted_contents(path &dir_path, int prefix_length) {
     return appended_contents;
 }
 
+std::optional<Path_Node*> archived_file_list(std::vector<std::string> &components, Path_Node * base_node) {
+    Path_Node * curr_node;
+    vector<string>::iterator itr = components.begin();
+    while (itr != components.end()) {
+        curr_node = curr_node->children[*itr];
+        itr++;
+    }
+
+    if ((curr_node->contents).empty()) {
+        return std::optional<Path_Node*>();
+    } else {
+        return std::optional<Path_Node*>(curr_node);
+    }
+} 
+
 std::vector<std::string> dir_components(const std::string &input, const path &base, bool &err ) {
     std::vector<std::string> components;
     path input_path(input);
