@@ -48,7 +48,7 @@ bool is_project(vector<string> &contents) {
 }
 
 // recursively copy dir contents
-vector<string> recursive_sorted_contents(path &dir_path) {
+vector<string> recursive_sorted_contents(path &dir_path, int prefix_length) {
     vector<string> appended_contents, all_subdir_contents;
     vector<int> insert_indices;
     int all_subdirs_size = 0;
@@ -63,14 +63,16 @@ vector<string> recursive_sorted_contents(path &dir_path) {
         }
 
         if (is_directory(itr->status())) {
-            vector<string> dir_contents = recursive_sorted_contents(curr_path);
+            vector<string> dir_contents = recursive_sorted_contents(curr_path, prefix_length);
             if (dir_contents.size() > 0) {
                 all_subdirs_size += dir_contents.size();
                 insert_indices.push_back(all_subdirs_size);
                 all_subdir_contents.insert(all_subdir_contents.end(), dir_contents.begin(), dir_contents.end());
             }
         } else {
-            appended_contents.push_back(curr_path.string());
+            string path_string = curr_path.string();
+            path_string.erase(0, prefix_length);
+            appended_contents.push_back(path_string);
             appended_contents_size++;
         }
     }
