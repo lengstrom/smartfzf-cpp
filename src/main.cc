@@ -41,14 +41,12 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    print_string_of_dir_nodes(curr_dir_node);
-    exit(1);
-
     while (true) {
         bool err;
         vector<string> curr_dir_components = dir_components(curr_line, base_directory, err);
         if (!err) {
-            std::optional<Path_Node*> list = archived_file_list(curr_dir_components, base_directory);
+            Path_Node * base_dir = 
+            std::experimental::optional<Path_Node*> list = archived_file_list(curr_dir_components, base_directory);
             vector<string> dir_contents;
             if (list) {
                 dir_contents = static_cast<vector<string>>(list);
