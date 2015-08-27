@@ -43,10 +43,11 @@ int main(int argc, char *argv[]) {
 
     while (true) {
         bool err;
+        Path_Node * typed_base_dir;
         vector<string> curr_dir_components = dir_components(curr_line, base_directory, err);
         if (!err) {
-            Path_Node * base_dir = 
-            std::experimental::optional<Path_Node*> list = archived_file_list(curr_dir_components, base_directory);
+            Path_Node * base_dir;
+            std::experimental::optional<Path_Node*> list = archived_file_list(curr_dir_components, full_base_dir, base_directory);
             vector<string> dir_contents;
             if (list) {
                 dir_contents = static_cast<vector<string>>(list);
