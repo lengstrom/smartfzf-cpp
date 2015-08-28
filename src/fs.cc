@@ -16,6 +16,28 @@ using std::experimental::optional;
 const string PROJECT_MARKERS[2] = {".git", ".svn"};
 const int PROJECT_MARKERS_SIZE = 2;
 
+Archive::Archive(Path_Node * base_node, path &base_directory) {
+    path full_base_dir = canonical(base_directory);
+    string base_dir_string = base_directory.string();
+    bool err = false;
+    vector<string> base_dir_components = dir_components(base_dir_string, full_base_dir, err);
+    if (err) {
+        exit(1);
+    } else {
+        vector<string>::reverse_iterator itr = base_dir_components.rbegin();
+        curr_dir_node->dir_name = *itr;
+        Path_Node * last_temp_node = curr_dir_node;
+        for (itr = itr + 1; itr != base_dir_components.rend(); itr++) {
+            Path_Node * temp_node = new Path_Node;
+            temp_node->dir_name = *itr;
+            temp_node->children[temp_node->dir_name] = last_temp_node;
+            last_temp_node->parent = temp_node;
+            last_temp_node->has_parent = true;
+            last_temp_node = temp_node;
+        }
+    }
+}
+
 vector<string> sorted_dir_contents(path &dir_path) {
     /* 
      * Possible issues:
