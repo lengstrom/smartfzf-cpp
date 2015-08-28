@@ -19,6 +19,7 @@ struct Path_Node {
 struct Archive {
     Archive(Path_Node * base_node, boost::filesystem::path &base_directory);
     Path_Node * base_path;
+    Path_Node * root;
     std::experimental::optional<Path_Node*> get_archived_file_list(std::vector<std::string> &components, Path_Node * base_node);
     void add_archived_files(std::vector<std::string> &components, Path_Node*);
 }

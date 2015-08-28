@@ -19,28 +19,7 @@ int main(int argc, char *argv[]) {
     Input i(r); // input object
     Path_Node * curr_dir_node = new Path_Node;
     // Build Path_Node branch
-    {
-        path full_base_dir = canonical(base_directory);
-        string base_dir_string = base_directory.string();
-        bool err = false;
-        vector<string> base_dir_components = dir_components(base_dir_string, full_base_dir, err);
-        if (err) {
-            exit(1);
-        } else {
-            vector<string>::reverse_iterator itr = base_dir_components.rbegin();
-            curr_dir_node->dir_name = *itr;
-            Path_Node * last_temp_node = curr_dir_node;
-            for (itr = itr + 1; itr != base_dir_components.rend(); itr++) {
-                Path_Node * temp_node = new Path_Node;
-                temp_node->dir_name = *itr;
-                temp_node->children[temp_node->dir_name] = last_temp_node;
-                last_temp_node->parent = temp_node;
-                last_temp_node->has_parent = true;
-                last_temp_node = temp_node;
-            }
-        }
-    }
-
+    Archive archive = Archive(curr_dir_node, base_directory); 
     while (true) {
         bool err;
         Path_Node * typed_base_dir;

@@ -16,7 +16,7 @@ using std::experimental::optional;
 const string PROJECT_MARKERS[2] = {".git", ".svn"};
 const int PROJECT_MARKERS_SIZE = 2;
 
-Archive::Archive(Path_Node * base_node, path &base_directory) {
+Archive::Archive(Path_Node * curr_dir_node, path &base_directory) {
     path full_base_dir = canonical(base_directory);
     string base_dir_string = base_directory.string();
     bool err = false;
@@ -35,7 +35,30 @@ Archive::Archive(Path_Node * base_node, path &base_directory) {
             last_temp_node->has_parent = true;
             last_temp_node = temp_node;
         }
+
+        root = last_temp_node;
     }
+}
+
+optional<Path_Node*> Archive::get_archived_file_list(std::vector<std::string> &components) {
+    Path_Node * curr_node = root;
+    vector<string>::iterator itr = components.begin();
+    while (itr != components.end()) {
+        string name = *itr;
+        if (curr_node->children.find(name) == curr_node->children.end())
+        curr_node = curr_node->children[name];
+        itr++;
+    }
+
+    if ((curr_node->contents).empty()) {
+        return optional<Path_Node*>();
+    } else {
+        return optional<Path_Node*>(curr_node);
+    }
+}
+
+void Archive::add_archived_files() {
+    
 }
 
 vector<string> sorted_dir_contents(path &dir_path) {
@@ -126,20 +149,6 @@ vector<string> recursive_sorted_contents(path &dir_path, int prefix_length) {
     return appended_contents;
 }
 
-optional<Path_Node*> archived_file_list(std::vector<std::string> &components, Path_Node * base_node) {
-    Path_Node * curr_node;
-    vector<string>::iterator itr = components.begin();
-    while (itr != components.end()) {
-        curr_node = curr_node->children[*itr];
-        itr++;
-    }
-
-    if ((curr_node->contents).empty()) {
-        return optional<Path_Node*>();
-    } else {
-        return optional<Path_Node*>(curr_node);
-    }
-} 
 
 std::vector<std::string> dir_components(const std::string &input, const path &base, bool &err ) {
     std::vector<std::string> components;
