@@ -67,7 +67,7 @@ Path_Node* Archive::find_node(vector<string> &components) {
     return curr_node;
 }
 
-void Archive::add_archived_files(std::vector<std::string> &components, vector<string> &files) {
+void Archive::add_archived_files(std::vector<std::string> &components, vector<string*> &files) {
     Path_Node * node = find_node(components);
     node->contents = files;
 }
@@ -89,7 +89,7 @@ std::string get_folder_from_line(std::string &line) {
     return dir;
 }
 
-vector<string> sorted_dir_contents(path &dir_path) {
+vector<string*> sorted_dir_contents(path &dir_path) {
     /* 
      * Possible issues:
      * Permissions - unable to read into directory (Does this actually happen???)
@@ -99,17 +99,17 @@ vector<string> sorted_dir_contents(path &dir_path) {
     // For now use naive implementation assuming no errors occur
     // Research done: try catch blocks have 0 performance hit (unless there's an exception, obv)
     // dir_path has type const path
-    vector<string> contents;
+    vector<string*> contents;
     directory_iterator end_itr; // default constructor = object past end
     for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
-        path curr_file = (*itr).path();
-        contents.push_back(curr_file.filename().string());
+        string * curr_file = new string((*itr).path().filename().string());
+        contents.push_back(curr_file);
     }
    
     return contents;
 }
 
-bool is_project(vector<string> &contents) {
+bool is_project(vector<string*> &contents) {
     // assume that dir_path is a directory
     for (auto itr : contents) {
         for (int i = 0; i < PROJECT_MARKERS_SIZE; i++) {
@@ -122,9 +122,13 @@ bool is_project(vector<string> &contents) {
     return false;
 }
 
+bool compare_string_pointers(string * a, string * b) {
+    return (*a) > (*b);
+}
+
 // recursively copy dir contents
-vector<string> recursive_sorted_contents(path &dir_path, int prefix_length) {
-    vector<string> appended_contents, all_subdir_contents;
+vector<string*> recursive_sorted_contents(path &dir_path, int prefix_length) {
+    vector<string*> appended_contents, all_subdir_contents;
     vector<int> insert_indices;
     int all_subdirs_size = 0;
     int appended_contents_size = 0;
@@ -138,15 +142,15 @@ vector<string> recursive_sorted_contents(path &dir_path, int prefix_length) {
         }
 
         if (is_directory(itr->status())) {
-            vector<string> dir_contents = recursive_sorted_contents(curr_path, prefix_length);
+            vector<string*> dir_contents = recursive_sorted_contents(curr_path, prefix_length);
             if (dir_contents.size() > 0) {
                 all_subdirs_size += dir_contents.size();
                 insert_indices.push_back(all_subdirs_size);
                 all_subdir_contents.insert(all_subdir_contents.end(), dir_contents.begin(), dir_contents.end());
             }
         } else {
-            string path_string = curr_path.string();
-            path_string.erase(0, prefix_length);
+            string * path_string = new string(curr_path.string());
+            (*path_string).erase(0, prefix_length);
             appended_contents.push_back(path_string);
             appended_contents_size++;
         }
@@ -157,11 +161,11 @@ vector<string> recursive_sorted_contents(path &dir_path, int prefix_length) {
     }
 
     if (insert_indices.size() > 1) { // one presorted thing in all_subdir_contents
-        vector<string>::iterator last_itr = all_subdir_contents.begin();
-        vector<string>::iterator scnd_last_itr = last_itr + insert_indices[0];
+        vector<string*>::iterator last_itr = all_subdir_contents.begin();
+        vector<string*>::iterator scnd_last_itr = last_itr + insert_indices[0];
         for (vector<int>::iterator itr = insert_indices.begin() + 1; itr != insert_indices.end(); itr++) {
-            vector<string>::iterator curr = scnd_last_itr + (*itr);
-            std::inplace_merge(last_itr, scnd_last_itr, curr);
+            vector<string*>::iterator curr = scnd_last_itr + (*itr);
+            std::inplace_merge(last_itr, scnd_last_itr, curr, compare_string_pointers);
             last_itr = scnd_last_itr;
             scnd_last_itr = curr;
         }
@@ -171,15 +175,15 @@ vector<string> recursive_sorted_contents(path &dir_path, int prefix_length) {
         return all_subdir_contents;
     }
 
-    std::sort(appended_contents.begin(), appended_contents.end());
+    std::sort(appended_contents.begin(), appended_contents.end(), compare_string_pointers);
     appended_contents.insert(appended_contents.end(), all_subdir_contents.begin(), all_subdir_contents.end());
-    std::inplace_merge(appended_contents.begin(), appended_contents.begin() + appended_contents_size, appended_contents.end());
+    std::inplace_merge(appended_contents.begin(), appended_contents.begin() + appended_contents_size, appended_contents.end(), compare_string_pointers);
     return appended_contents;
 }
 
 
-std::vector<std::string> dir_components(const std::string &input, const path &base, bool &err ) {
-    std::vector<std::string> components;
+std::vector<std::string*> dir_components(const std::string &input, const path &base, bool &err ) {
+    std::vector<std::string*> components;
     path input_path(input);
     boost::system::error_code ec;
     path normalized_in_path = canonical(input_path, base, ec);

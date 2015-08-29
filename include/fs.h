@@ -11,6 +11,7 @@ struct Path_Node {
     // don't get child_dirs unless absolutely necessary
     Path_Node * parent;
     bool has_parent = false;
+    Search_Index * index;
     std::string dir_name;
     std::vector<std::string> contents;
     std::map<std::string, Path_Node*> children;
