@@ -18,7 +18,6 @@ int main(int argc, char *argv[]) {
     Path_Node * curr_dir_node = new Path_Node;
     // Build Path_Node branch
     Archive archive = Archive(curr_dir_node, base_directory);
-    
     while (true) {
         r.rerender_window();
         curr_line = i.read_char();
