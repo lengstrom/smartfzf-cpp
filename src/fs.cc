@@ -41,15 +41,7 @@ Archive::Archive(Path_Node * curr_dir_node, path &base_directory) {
 }
 
 optional<Path_Node*> Archive::get_archived_file_list(std::vector<std::string> &components) {
-    Path_Node * curr_node = root;
-    vector<string>::iterator itr = components.begin();
-    while (itr != components.end()) {
-        string name = *itr;
-        if (curr_node->children.find(name) == curr_node->children.end())
-        curr_node = curr_node->children[name];
-        itr++;
-    }
-
+    Path_Node* curr_node = find_node(components);
     if ((curr_node->contents).empty()) {
         return optional<Path_Node*>();
     } else {
@@ -57,8 +49,44 @@ optional<Path_Node*> Archive::get_archived_file_list(std::vector<std::string> &c
     }
 }
 
-void Archive::add_archived_files() {
-    
+Path_Node* Archive::find_node(vector<string> &components) {
+    Path_Node * curr_node = root;
+    vector<string>::iterator itr = components.begin();
+    while (itr != components.end()) {
+        string name = (*itr);
+        if (curr_node->children.find(name) == curr_node->children.end()) {
+            curr_node = curr_node->children[name];
+        } else {
+            Path_Node * new_node = new Path_Node;
+            new_node->dir_name = name;
+            new_node->parent = curr_node;
+            curr_node->children[name] = new_node;
+        }
+        itr++;
+    }
+    return curr_node;
+}
+
+void Archive::add_archived_files(std::vector<std::string> &components, vector<string> &files) {
+    Path_Node * node = find_node(components);
+    node->contents = files;
+}
+
+std::string get_folder_from_line(std::string &line) {
+    if (line.empty()) return "";
+    string dir;
+    if (line[0] == '/') dir = "/";
+    string curr_subpath = "";
+    for (string::iterator itr = line.begin(); itr != line.end(); itr++) {
+        if (*itr == '/') {
+            dir += curr_subpath;
+            curr_subpath = "";
+        } else {
+            curr_subpath += *itr;
+        }
+    }
+
+    return dir;
 }
 
 vector<string> sorted_dir_contents(path &dir_path) {

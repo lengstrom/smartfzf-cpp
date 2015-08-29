@@ -1,8 +1,6 @@
 #include <iostream>
 #include <vector>
-
 #include <boost/filesystem.hpp>
-
 #include "smartfzf.h"
 #include "input.h"
 #include "fs.h"
@@ -19,26 +17,9 @@ int main(int argc, char *argv[]) {
     Input i(r); // input object
     Path_Node * curr_dir_node = new Path_Node;
     // Build Path_Node branch
-    Archive archive = Archive(curr_dir_node, base_directory); 
+    Archive archive = Archive(curr_dir_node, base_directory);
+    
     while (true) {
-        bool err;
-        Path_Node * typed_base_dir;
-        vector<string> curr_dir_components = dir_components(curr_line, base_directory, err);
-        if (!err) {
-            Path_Node * base_dir;
-            std::experimental::optional<Path_Node*> list = archived_file_list(curr_dir_components, full_base_dir, base_directory);
-            vector<string> dir_contents;
-            if (list) {
-                dir_contents = static_cast<vector<string>>(list);
-            } else {
-                dir_contents = sorted_dir_contents(this_dir, current_directory.size());
-            }    
-            
-            matched_items = match_from_candidates(curr_line,dir_contents);
-        } else {
-            matched_items = curr_dir_components;
-        }
-        
         r.rerender_window();
         curr_line = i.read_char();
         // current_directory = get_directory_vector(curr_line);
