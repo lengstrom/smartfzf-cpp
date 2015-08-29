@@ -15,8 +15,9 @@ using std::string;
 
 path base_dir = path("../test/sandbox/");
 
-bool check_vecs(std::vector<std::string> v1, std::vector<std::string> v2) {
-    std::vector<std::string>::size_type n = v1.size();
+bool check_vecs(std::vector<std::string*> v1, std::vector<std::string*> v2) {
+    std::vector<std::string*>::size_type n = v1.size();
+    
     return (std::equal(v1.begin(), v1.begin() + n, v2.begin()));
 }
 

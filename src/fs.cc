@@ -112,8 +112,9 @@ vector<string*> sorted_dir_contents(path &dir_path) {
 bool is_project(vector<string*> &contents) {
     // assume that dir_path is a directory
     for (auto itr : contents) {
+        string file = *itr;
         for (int i = 0; i < PROJECT_MARKERS_SIZE; i++) {
-            if (PROJECT_MARKERS[i] == itr) {
+            if (PROJECT_MARKERS[i] == file) {
                 return true;
             }
         }
@@ -182,8 +183,8 @@ vector<string*> recursive_sorted_contents(path &dir_path, int prefix_length) {
 }
 
 
-std::vector<std::string*> dir_components(const std::string &input, const path &base, bool &err ) {
-    std::vector<std::string*> components;
+std::vector<std::string> dir_components(const std::string &input, const path &base, bool &err ) {
+    std::vector<std::string> components;
     path input_path(input);
     boost::system::error_code ec;
     path normalized_in_path = canonical(input_path, base, ec);
