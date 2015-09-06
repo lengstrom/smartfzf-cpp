@@ -137,7 +137,6 @@ vector<string*> recursive_sorted_contents(path &dir_path, int prefix_length) {
     for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
         path curr_path = itr->path();
         string curr_basename = curr_path.filename().string();
-        // take out hidden files
         if (curr_basename[0] == '.') {
             continue;
         }
@@ -166,6 +165,7 @@ vector<string*> recursive_sorted_contents(path &dir_path, int prefix_length) {
         vector<string*>::iterator scnd_last_itr = last_itr + insert_indices[0];
         for (vector<int>::iterator itr = insert_indices.begin() + 1; itr != insert_indices.end(); itr++) {
             vector<string*>::iterator curr = scnd_last_itr + (*itr);
+            // where break occurs
             std::inplace_merge(last_itr, scnd_last_itr, curr, compare_string_pointers);
             last_itr = scnd_last_itr;
             scnd_last_itr = curr;
@@ -181,7 +181,6 @@ vector<string*> recursive_sorted_contents(path &dir_path, int prefix_length) {
     std::inplace_merge(appended_contents.begin(), appended_contents.begin() + appended_contents_size, appended_contents.end(), compare_string_pointers);
     return appended_contents;
 }
-
 
 std::vector<std::string> dir_components(const std::string &input, const path &base, bool &err ) {
     std::vector<std::string> components;

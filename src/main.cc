@@ -21,7 +21,6 @@ int main(int argc, char *argv[]) {
     while (true) {
         r.rerender_window();
         curr_line = i.read_char();
-        // current_directory = get_directory_vector(curr_line);
     }
     return 0;
 }
