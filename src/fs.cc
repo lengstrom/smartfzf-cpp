@@ -140,7 +140,6 @@ void merge_into_vector(vector<T,A> &vec, T f) {
 // recursive_sorted_contents(base_dir, "");
 
 vector<string> recursive_sorted_contents(path &dir_path, string prefix) {
-    std::cout << "Now in: " << dir_path << std::endl;
     directory_iterator end_itr;
     vector<string> file_entries;
     vector<path> dir_entries;
