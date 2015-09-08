@@ -29,7 +29,7 @@ struct Archive {
 std::string get_folder_from_line(std::string &line);
 std::vector<std::string*> sorted_dir_contents(boost::filesystem::path &dir_path);
 bool is_project(std::vector<std::string*> &contents);
-std::vector<std::string*> recursive_sorted_contents(boost::filesystem::path &dir_path, int prefix_length);
+std::vector<std::string*> recursive_sorted_contents(boost::filesystem::path &dir_path, std::string prefix);
 std::vector<std::string> dir_components(const std::string &input, const boost::filesystem::path &base, bool &err);
 std::string get_folder_from_line(std::string &line);
 Path_Node* find_node(std::vector<std::string> &components);
