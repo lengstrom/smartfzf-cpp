@@ -129,11 +129,28 @@ bool compare_string_pointers(string * a, string * b) {
 
 // recursively copy dir contents
 vector<string*> recursive_sorted_contents(path &dir_path, int prefix_length) {
-    vector<string*> appended_contents, all_subdir_contents;
-    vector<int> insert_indices;
-    int all_subdirs_size = 0;
-    int appended_contents_size = 0;
+    vector<string*> subdir_contents;
     directory_iterator end_itr;
+    vector<directory_entry> dir_entries;
+    vector<directory_entry> file_entries;
+    for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
+        directory_entry candidate = *itr;
+        string basename = candidate->path().filename().string()[0];
+        if (basename[0] == '.') {
+            continue;
+        }
+
+        if (is_directory(itr->status())) {
+            dir_entries.push_back(candidate);
+        } else {
+            file_entries.push_back(candidate);
+        }
+    }
+
+    for (auto i : file_entries) {
+        subdir_contents.push_back(i)
+    }
+
     for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
         path curr_path = itr->path();
         string curr_basename = curr_path.filename().string();
@@ -163,8 +180,18 @@ vector<string*> recursive_sorted_contents(path &dir_path, int prefix_length) {
     if (insert_indices.size() > 1) { // one presorted thing in all_subdir_contents
         vector<string*>::iterator last_itr = all_subdir_contents.begin();
         vector<string*>::iterator scnd_last_itr = last_itr + insert_indices[0];
+        for (auto i : insert_indices) {
+            std::cout << i << std::endl;
+        }
+
+        for (vector<string*>::iterator it = all_subdir_contents.begin(); it != all_subdir_contents.end(); it++) {
+            std::cout << *it << "\t" << **it << std::endl;
+        }
+
+        std::cout << "done enumerating..." << std::endl;
         for (vector<int>::iterator itr = insert_indices.begin() + 1; itr != insert_indices.end(); itr++) {
             vector<string*>::iterator curr = scnd_last_itr + (*itr);
+
             // where break occurs
             std::inplace_merge(last_itr, scnd_last_itr, curr, compare_string_pointers);
             last_itr = scnd_last_itr;
