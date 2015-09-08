@@ -123,23 +123,32 @@ bool is_project(vector<string*> &contents) {
     return false;
 }
 
-template<typename T>
-void loc_in_vec(typedef typename vector<T>::iterator &vec, T f) {
-    while (**vec > *f) {
+template<typename It, typename T>
+void loc_in_vec(It vec, T f, bool (*compare)(T, T)) {
+    while ((*compare)(*vec,f)) {
         vec++;
     }
 }
 
-template<typename T>
-void merge_into_vector(typedef typename vector<T> vec, T f) {
-    typedef typename vector<T>::iterator vec_itr = vec.begin();
-    loc_in_vec(vec_itr, f);
+template<typename T, typename A>
+void merge_into_vector(vector<T,A> vec, T f, bool (*compare)(T, T)) {
+    typename vector<T, A>::iterator vec_itr = vec.begin();
+    loc_in_vec(vec_itr, f, compare);
     vec.insert(vec_itr, f);
+}
+
+template<typename T>
+bool compare_ptrs(T a, T b) {
+    return *a > *b;
+}
+
+template<typename T>
+bool compare_vals(T a, T b) {
+    return a > b;
 }
 
 // recursively copy dir contents
 vector<string*> recursive_sorted_contents(path &dir_path, string prefix) {
-    vector<string*> subdir_contents;
     directory_iterator end_itr;
     vector<string*> file_entries;
     vector<path> dir_entries;
@@ -151,19 +160,21 @@ vector<string*> recursive_sorted_contents(path &dir_path, string prefix) {
 
         if (is_directory(itr->status())) {
             path p = itr->path();
-            merge_into_vector(dir_entries, s);
+            merge_into_vector(dir_entries, p, compare_vals);
         } else {
             string * s = new string(prefix + base_name);
-            merge_into_vector(file_entries, s);
+            merge_into_vector(file_entries, s, compare_ptrs);
         }
     }
 
     vector<string*>::iterator it = file_entries.begin();
-    for (auto dir : dir_entries) {
-        loc_in_vec(it, dir);
-        path dir_path = dir_path / path(*dir);
-        vector<string*> dir_contents = recursive_sorted_contents(dir_path, prefix + "/" + *dir);
+    for (auto dir_path : dir_entries) {
+        string * s = new string(dir_path.filename().string());
+        loc_in_vec(it, s, compare_ptrs);
+
+        vector<string*> dir_contents = recursive_sorted_contents(dir_path, prefix + "/" + (*s));
         file_entries.insert(it, dir_contents.begin(), dir_contents.end());
+        delete s;
     }
 
     return file_entries;
