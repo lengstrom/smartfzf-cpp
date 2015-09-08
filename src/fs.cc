@@ -127,12 +127,22 @@ bool compare_string_pointers(string * a, string * b) {
     return (*a) > (*b);
 }
 
+void merge_into_vector(vector<string*>::iterator vec_itr, string* &f) {
+    loc_in_vec(vec_itr, f);
+    file_entries.insert(vec_itr, f);
+}
+
+void loc_in_vec(<vector<string*>::iterator &vec, string* &f) {
+    while (**vec > *f) {
+        vec++;
+    }
+}
+
 // recursively copy dir contents
-vector<string*> recursive_sorted_contents(path &dir_path, int prefix_length) {
+vector<string*> recursive_sorted_contents(path &dir_path, string prefix) {
     vector<string*> subdir_contents;
     directory_iterator end_itr;
-    vector<directory_entry> dir_entries;
-    vector<directory_entry> file_entries;
+    vector<string*> dir_entries, file_entries;
     for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
         directory_entry candidate = *itr;
         string basename = candidate->path().filename().string()[0];
@@ -141,72 +151,22 @@ vector<string*> recursive_sorted_contents(path &dir_path, int prefix_length) {
         }
 
         if (is_directory(itr->status())) {
-            dir_entries.push_back(candidate);
+            string * s = new string(itr->path().filename());
+            merge_into_vector(dir_entries.begin(), s);
         } else {
-            file_entries.push_back(candidate);
+            string * s = new string(prefix + (itr->path().filename()));
+            merge_into_vector(file_entries.begin(), s);
         }
     }
 
-    for (auto i : file_entries) {
-        subdir_contents.push_back(i)
+    vector<string*>::iterator it = file_entries.begin();
+    for (auto dir : dir_entries) {
+        loc_in_vec(it, dir);
+        vector<string*> dir_contents = recursive_sorted_contents(dir_path / path(dir), prefix + "/" + dir);
+        file_entries.insert(it, dir_contents.begin(), dir_contents.end());
     }
 
-    for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
-        path curr_path = itr->path();
-        string curr_basename = curr_path.filename().string();
-        if (curr_basename[0] == '.') {
-            continue;
-        }
-
-        if (is_directory(itr->status())) {
-            vector<string*> dir_contents = recursive_sorted_contents(curr_path, prefix_length);
-            if (dir_contents.size() > 0) {
-                all_subdirs_size += dir_contents.size();
-                insert_indices.push_back(all_subdirs_size);
-                all_subdir_contents.insert(all_subdir_contents.end(), dir_contents.begin(), dir_contents.end());
-            }
-        } else {
-            string * path_string = new string(curr_path.string());
-            (*path_string).erase(0, prefix_length);
-            appended_contents.push_back(path_string);
-            appended_contents_size++;
-        }
-    }
-
-    if (all_subdirs_size == 0) { // nothing in all_subdir_contents
-        return appended_contents;
-    }
-
-    if (insert_indices.size() > 1) { // one presorted thing in all_subdir_contents
-        vector<string*>::iterator last_itr = all_subdir_contents.begin();
-        vector<string*>::iterator scnd_last_itr = last_itr + insert_indices[0];
-        for (auto i : insert_indices) {
-            std::cout << i << std::endl;
-        }
-
-        for (vector<string*>::iterator it = all_subdir_contents.begin(); it != all_subdir_contents.end(); it++) {
-            std::cout << *it << "\t" << **it << std::endl;
-        }
-
-        std::cout << "done enumerating..." << std::endl;
-        for (vector<int>::iterator itr = insert_indices.begin() + 1; itr != insert_indices.end(); itr++) {
-            vector<string*>::iterator curr = scnd_last_itr + (*itr);
-
-            // where break occurs
-            std::inplace_merge(last_itr, scnd_last_itr, curr, compare_string_pointers);
-            last_itr = scnd_last_itr;
-            scnd_last_itr = curr;
-        }
-    }
-
-    if (appended_contents_size == 0) {
-        return all_subdir_contents;
-    }
-
-    std::sort(appended_contents.begin(), appended_contents.end(), compare_string_pointers);
-    appended_contents.insert(appended_contents.end(), all_subdir_contents.begin(), all_subdir_contents.end());
-    std::inplace_merge(appended_contents.begin(), appended_contents.begin() + appended_contents_size, appended_contents.end(), compare_string_pointers);
-    return appended_contents;
+    return file_entries;
 }
 
 std::vector<std::string> dir_components(const std::string &input, const path &base, bool &err ) {
