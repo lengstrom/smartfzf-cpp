@@ -89,7 +89,7 @@ std::string get_folder_from_line(std::string &line) {
     return dir;
 }
 
-vector<string*> sorted_dir_contents(path &dir_path) {
+vector<string> sorted_dir_contents(path &dir_path) {
     /* 
      * Possible issues:
      * Permissions - unable to read into directory (Does this actually happen???)
@@ -99,20 +99,19 @@ vector<string*> sorted_dir_contents(path &dir_path) {
     // For now use naive implementation assuming no errors occur
     // Research done: try catch blocks have 0 performance hit (unless there's an exception, obv)
     // dir_path has type const path
-    vector<string*> contents;
+    vector<string> contents;
     directory_iterator end_itr; // default constructor = object past end
     for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
-        string * curr_file = new string((*itr).path().filename().string());
+        string curr_file = (*itr).path().filename().string();
         contents.push_back(curr_file);
     }
    
     return contents;
 }
 
-bool is_project(vector<string*> &contents) {
+bool is_project(vector<string> &contents) {
     // assume that dir_path is a directory
-    for (auto itr : contents) {
-        string file = *itr;
+    for (auto file : contents) {
         for (int i = 0; i < PROJECT_MARKERS_SIZE; i++) {
             if (PROJECT_MARKERS[i] == file) {
                 return true;
@@ -124,33 +123,26 @@ bool is_project(vector<string*> &contents) {
 }
 
 template<typename It, typename T>
-void loc_in_vec(It vec, T f, bool (*compare)(T, T)) {
-    while ((*compare)(*vec,f)) {
+void loc_in_vec(It &vec, It end, T f) {
+    while (vec != end && *vec < f) {
         vec++;
     }
 }
 
 template<typename T, typename A>
-void merge_into_vector(vector<T,A> vec, T f, bool (*compare)(T, T)) {
+void merge_into_vector(vector<T,A> &vec, T f) {
     typename vector<T, A>::iterator vec_itr = vec.begin();
-    loc_in_vec(vec_itr, f, compare);
+    loc_in_vec(vec_itr, vec.end(), f);
     vec.insert(vec_itr, f);
 }
 
-template<typename T>
-bool compare_ptrs(T a, T b) {
-    return *a > *b;
-}
-
-template<typename T>
-bool compare_vals(T a, T b) {
-    return a > b;
-}
-
 // recursively copy dir contents
-vector<string*> recursive_sorted_contents(path &dir_path, string prefix) {
+// recursive_sorted_contents(base_dir, "");
+
+vector<string> recursive_sorted_contents(path &dir_path, string prefix) {
+    std::cout << "Now in: " << dir_path << std::endl;
     directory_iterator end_itr;
-    vector<string*> file_entries;
+    vector<string> file_entries;
     vector<path> dir_entries;
     for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
         string base_name = itr->path().filename().string();
@@ -160,22 +152,32 @@ vector<string*> recursive_sorted_contents(path &dir_path, string prefix) {
 
         if (is_directory(itr->status())) {
             path p = itr->path();
-            merge_into_vector(dir_entries, p, compare_vals);
+            merge_into_vector(dir_entries, p);
         } else {
-            string * s = new string(prefix + base_name);
-            merge_into_vector(file_entries, s, compare_ptrs);
+            merge_into_vector(file_entries, base_name);
         }
     }
 
-    vector<string*>::iterator it = file_entries.begin();
+    
+    std::cout << "-----" << std::endl;
+    vector<string>::iterator it = file_entries.begin();
     for (auto dir_path : dir_entries) {
-        string * s = new string(dir_path.filename().string());
-        loc_in_vec(it, s, compare_ptrs);
-
-        vector<string*> dir_contents = recursive_sorted_contents(dir_path, prefix + "/" + (*s));
+        string s = dir_path.filename().string();
+        loc_in_vec(it, file_entries.end(), s);
+        vector<string> dir_contents = recursive_sorted_contents(dir_path, s + "/");
+        file_entries.reserve(dir_contents.size() + file_entries.size());
         file_entries.insert(it, dir_contents.begin(), dir_contents.end());
-        delete s;
     }
+
+    for (int i = 0; i < file_entries.size(); i++) {
+        file_entries[i] = prefix + file_entries[i];
+    }
+
+    std::cout << "Files:" << std::endl;
+    for (auto i : file_entries) {
+        std::cout << i << std::endl;
+    }
+
 
     return file_entries;
 }
