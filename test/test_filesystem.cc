@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(filesystem_test) {
     BOOST_CHECK(!is_project(contents));
     
     // some kind of memory error here
-    vector<string*> all_contents = recursive_sorted_contents(base_dir, base_dir.string().size());
+    vector<string*> all_contents = recursive_sorted_contents(base_dir, "");
     for (auto i : all_contents) {
         std::cout << i << std::endl;
     }
