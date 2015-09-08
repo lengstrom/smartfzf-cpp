@@ -158,8 +158,6 @@ vector<string> recursive_sorted_contents(path &dir_path, string prefix) {
         }
     }
 
-    
-    std::cout << "-----" << std::endl;
     vector<string>::iterator it = file_entries.begin();
     for (auto dir_path : dir_entries) {
         string s = dir_path.filename().string();
@@ -177,7 +175,7 @@ vector<string> recursive_sorted_contents(path &dir_path, string prefix) {
     for (auto i : file_entries) {
         std::cout << i << std::endl;
     }
-
+    std::cout << "-----" << std::endl;
 
     return file_entries;
 }
