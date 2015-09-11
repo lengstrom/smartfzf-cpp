@@ -123,42 +123,41 @@ bool is_project(vector<string> &contents) {
 }
 
 template<typename It, typename T>
-void loc_in_vec(It &vec, It end, T f) {
+It loc_in_vec(It vec, It end, T f) {
     while (vec != end && *vec < f) {
-        vec++;
+        vec = vec + 1;
     }
-}
 
-template<typename T, typename A>
-void merge_into_vector(vector<T,A> &vec, T f) {
-    typename vector<T, A>::iterator vec_itr = vec.begin();
-    loc_in_vec(vec_itr, vec.end(), f);
-    vec.insert(vec_itr, f);
+    return vec;
 }
 
 // recursively copy dir contents
-vector<string> recursive_sorted_contents(path &dir_path, string prefix) {
+vector<string> recursive_sorted_contents(path dir_path, string prefix) {
+    std::cout << "Curr: " << dir_path << std::endl;
     directory_iterator end_itr;
     vector<string> file_entries;
     vector<path> dir_entries;
     for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
-        string base_name = itr->path().filename().string();
+        path p = itr->path();
+        string base_name = p.filename().string();
         if (base_name[0] == '.') {
             continue;
         }
 
         if (is_directory(itr->status())) {
-            path p = itr->path();
-            merge_into_vector(dir_entries, p);
+            auto vec_itr = loc_in_vec(dir_entries.begin(), dir_entries.end(), p);
+            dir_entries.insert(vec_itr, p);
         } else {
-            merge_into_vector(file_entries, base_name);
+            auto vec_itr = loc_in_vec(file_entries.begin(), file_entries.end(), base_name);
+            file_entries.insert(vec_itr, base_name);
         }
     }
 
     vector<string>::iterator it = file_entries.begin();
     for (auto dir_path : dir_entries) {
         string s = dir_path.filename().string();
-        loc_in_vec(it, file_entries.end(), s);
+        std::cout << "Dir path: " << dir_path << std::endl;
+        it = loc_in_vec(it, file_entries.end(), s);
         vector<string> dir_contents = recursive_sorted_contents(dir_path, s + "/");
         file_entries.reserve(dir_contents.size() + file_entries.size());
         file_entries.insert(it, dir_contents.begin(), dir_contents.end());
