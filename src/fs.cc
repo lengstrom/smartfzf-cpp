@@ -123,12 +123,14 @@ bool is_project(vector<string> &contents) {
 }
 
 template<typename It, typename T>
-It loc_in_vec(It vec, It end, T f) {
-    while (vec != end && *vec < f) {
-        vec = vec + 1;
+It loc_in_vec(It start, const vector<T> &vec, T f) {
+    while (start != vec.end() && *vec < f) {
+        std::cout << "iteration... :: " << *start << std::endl;
+        exit(1);
+        start = start + 1;
     }
 
-    return vec;
+    return start;
 }
 
 // recursively copy dir contents
@@ -139,6 +141,7 @@ vector<string> recursive_sorted_contents(path dir_path, string prefix) {
     vector<path> dir_entries;
     for (directory_iterator itr(dir_path); itr != end_itr; itr++) {
         path p = itr->path();
+        std::cout << "path candidate: " << p << std::endl;
         string base_name = p.filename().string();
         if (base_name[0] == '.') {
             continue;
@@ -153,11 +156,19 @@ vector<string> recursive_sorted_contents(path dir_path, string prefix) {
         }
     }
 
+    std::cout << "Files:" << std::endl;
+    for (auto i : file_entries) {
+        std::cout << i << std::endl;
+    }
+    std::cout << "-----" << std::endl;
+
+
     vector<string>::iterator it = file_entries.begin();
     for (auto dir_path : dir_entries) {
         string s = dir_path.filename().string();
         std::cout << "Dir path: " << dir_path << std::endl;
         it = loc_in_vec(it, file_entries.end(), s);
+        std::cout << "Iterator loc" << std::endl;
         vector<string> dir_contents = recursive_sorted_contents(dir_path, s + "/");
         file_entries.reserve(dir_contents.size() + file_entries.size());
         file_entries.insert(it, dir_contents.begin(), dir_contents.end());
@@ -167,12 +178,7 @@ vector<string> recursive_sorted_contents(path dir_path, string prefix) {
         file_entries[i] = prefix + file_entries[i];
     }
 
-    std::cout << "Files:" << std::endl;
-    for (auto i : file_entries) {
-        std::cout << i << std::endl;
-    }
-    std::cout << "-----" << std::endl;
-
+    std::cout << "eof" << std::endl;
     return file_entries;
 }
 
